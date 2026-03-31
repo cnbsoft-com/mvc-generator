@@ -1,0 +1,232 @@
+{
+  "databaseChangeLog": [
+    {
+      "changeSet": {
+        "id": "code-group-001",
+        "author": "dino",
+        "changes": [
+          {
+            "createTable": {
+              "tableName": "code_group",
+              "columns": [
+                {
+                  "column": {
+                    "name": "code_group",
+                    "type": "${varcharType}(50)",
+                    "remarks": "코드 그룹",
+                    "constraints": {
+                      "primaryKey": true
+                    }
+                  }
+                },
+                {
+                  "column": {
+                    "name": "code_group_name",
+                    "type": "${varcharType}(100)",
+                    "remarks": "코드 그룹명",
+                    "constraints": {
+                      "nullable": false
+                    }
+                  }
+                },
+                {
+                  "column": {
+                    "name": "description",
+                    "type": "${varcharType}(200)",
+                    "remarks": "상세설명"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "create_dt",
+                    "type": "${datetimeType}",
+                    "defaultValueDate": "${now}"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "edit_dt",
+                    "type": "${datetimeType}",
+                    "defaultValueDate": "${now}"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "loadData": {
+              "tableName": "code_group",
+              "file": "changelog/data/code_group.txt",
+              "separator": "|",
+              "columns": [
+                { "column": { "name": "code_group",      "header": "code_group" } },
+                { "column": { "name": "code_group_name", "header": "code_group_name" } },
+                { "column": { "name": "description",     "header": "description" } }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "changeSet": {
+        "id": "code-group-002",
+        "author": "dino",
+        "changes": [
+          {
+            "loadData": {
+              "tableName": "code_group",
+              "file": "changelog/data/code_group_02.txt",
+              "separator": "|",
+              "columns": [
+                { "column": { "name": "code_group",      "header": "code_group" } },
+                { "column": { "name": "code_group_name", "header": "code_group_name" } },
+                { "column": { "name": "description",     "header": "description" } }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "changeSet": {
+        "id": "code-001",
+        "author": "dino",
+        "changes": [
+          {
+            "createSequence": {
+              "sequenceName": "code_id_seq",
+              "startValue": 1,
+              "incrementBy": 1
+            }
+          },
+          {
+            "createTable": {
+              "tableName": "code",
+              "columns": [
+                {
+                  "column": {
+                    "name": "id",
+                    "type": "${seqType}",
+                    "remarks": "고유식별자",
+                    "defaultValueSequenceNext": "code_id_seq"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "code",
+                    "type": "${varcharType}(50)",
+                    "remarks": "코드",
+                    "constraints": {
+                      "primaryKey": true
+                    }
+                  }
+                },
+                {
+                  "column": {
+                    "name": "lang_cd",
+                    "type": "${varcharType}(10)",
+                    "remarks": "언어유형",
+                    "constraints": {
+                      "primaryKey": true
+                    }
+                  }
+                },
+                {
+                  "column": {
+                    "name": "code_group",
+                    "type": "${varcharType}(100)",
+                    "remarks": "코드 그룹",
+                    "constraints": {
+                      "primaryKey": true
+                    }
+                  }
+                },
+                {
+                  "column": {
+                    "name": "code_value",
+                    "type": "${varcharType}(100)",
+                    "remarks": "코드 값"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "use_yn",
+                    "type": "${varcharType}(1)",
+                    "remarks": "사용여부",
+                    "defaultValue": "Y"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "ord",
+                    "type": "tinyint"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "create_dt",
+                    "type": "${datetimeType}",
+                    "defaultValueDate": "${now}"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "edit_dt",
+                    "type": "${datetimeType}",
+                    "defaultValueDate": "${now}"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "createIndex": {
+              "tableName": "code",
+              "indexName": "code_id_idx",
+              "columns": [
+                { "column": { "name": "id" } }
+              ]
+            }
+          },
+          {
+            "loadData": {
+              "tableName": "code",
+              "file": "changelog/data/code.txt",
+              "separator": "|",
+              "columns": [
+                { "column": { "name": "code_group",  "header": "code_group" } },
+                { "column": { "name": "code",        "header": "code" } },
+                { "column": { "name": "code_value",  "header": "code_value" } },
+                { "column": { "name": "lang_cd",     "header": "lang_cd" } },
+                { "column": { "name": "ord",         "header": "ord" } }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "changeSet": {
+        "id": "code-002",
+        "author": "dino",
+        "changes": [
+          {
+            "loadData": {
+              "tableName": "code",
+              "file": "changelog/data/code_02.txt",
+              "separator": "|",
+              "columns": [
+                { "column": { "name": "code_group",  "header": "code_group" } },
+                { "column": { "name": "code",        "header": "code" } },
+                { "column": { "name": "code_value",  "header": "code_value" } },
+                { "column": { "name": "lang_cd",     "header": "lang_cd" } },
+                { "column": { "name": "ord",         "header": "ord" } }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,460 @@
+{
+  "databaseChangeLog": [
+    {
+      "changeSet": {
+        "id": "user-group-type-001",
+        "author": "dino",
+        "changes": [
+          {
+            "createTable": {
+              "tableName": "user_group_type",
+              "columns": [
+                {
+                  "column": {
+                    "name": "user_group",
+                    "type": "${varcharType}(50)",
+                    "remarks": "사용자 그룹 유형",
+                    "constraints": {
+                      "primaryKey": true
+                    }
+                  }
+                },
+                {
+                  "column": {
+                    "name": "user_group_name",
+                    "type": "${varcharType}(100)",
+                    "remarks": "사용자 그룹명",
+                    "constraints": {
+                      "nullable": false
+                    }
+                  }
+                },
+                {
+                  "column": {
+                    "name": "create_dt",
+                    "type": "${datetimeType}",
+                    "defaultValueDate": "${now}"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "edit_dt",
+                    "type": "${datetimeType}",
+                    "defaultValueDate": "${now}"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "changeSet": {
+        "id": "user-001",
+        "author": "dino",
+        "changes": [
+          {
+            "createTable": {
+              "tableName": "user",
+              "columns": [
+                {
+                  "column": {
+                    "name": "id",
+                    "type": "${uuidType}",
+                    "remarks": "${uuidRemark}",
+                    "constraints": {
+                      "primaryKey": true
+                    }
+                  }
+                },
+                {
+                  "column": {
+                    "name": "username",
+                    "type": "${varcharType}(100)",
+                    "remarks": "사용자 아이디",
+                    "constraints": {
+                      "nullable": false
+                    }
+                  }
+                },
+                {
+                  "column": {
+                    "name": "password",
+                    "type": "${varcharType}(100)",
+                    "remarks": "비밀번호",
+                    "constraints": {
+                      "nullable": false
+                    }
+                  }
+                },
+                {
+                  "column": {
+                    "name": "email",
+                    "type": "${varcharType}(100)",
+                    "remarks": "이메일",
+                    "constraints": {
+                      "nullable": false
+                    }
+                  }
+                },
+                {
+                  "column": {
+                    "name": "credential_expired",
+                    "type": "char(1)",
+                    "defaultValue": "0",
+                    "remarks": "인증 만료여부"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "expired",
+                    "type": "char(1)",
+                    "defaultValue": "0",
+                    "remarks": "만료여부"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "locked",
+                    "type": "char(1)",
+                    "defaultValue": "0",
+                    "remarks": "잠금여부"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "enabled",
+                    "type": "char(1)",
+                    "defaultValue": "1",
+                    "remarks": "사용여부"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "create_dt",
+                    "type": "${datetimeType}",
+                    "defaultValueDate": "${now}"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "edit_dt",
+                    "type": "${datetimeType}",
+                    "defaultValueDate": "${now}"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "createIndex": {
+              "tableName": "user",
+              "indexName": "username_idx",
+              "columns": [
+                { "column": { "name": "username" } }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "changeSet": {
+        "id": "user-detail-001",
+        "author": "dino",
+        "changes": [
+          {
+            "createTable": {
+              "tableName": "user_detail",
+              "columns": [
+                {
+                  "column": {
+                    "name": "id",
+                    "type": "${uuidType}",
+                    "remarks": "${uuidRemark}",
+                    "constraints": {
+                      "primaryKey": true
+                    }
+                  }
+                },
+                {
+                  "column": {
+                    "name": "username",
+                    "type": "${varcharType}(100)",
+                    "remarks": "사용자 로그인 아이디",
+                    "constraints": {
+                      "primaryKey": true
+                    }
+                  }
+                },
+                {
+                  "column": {
+                    "name": "first_name",
+                    "type": "${varcharType}(50)",
+                    "remarks": "이름",
+                    "constraints": {
+                      "nullable": false
+                    }
+                  }
+                },
+                {
+                  "column": {
+                    "name": "last_name",
+                    "type": "${varcharType}(50)",
+                    "remarks": "성",
+                    "constraints": {
+                      "nullable": false
+                    }
+                  }
+                },
+                {
+                  "column": {
+                    "name": "cel_no",
+                    "type": "${varcharType}(30)",
+                    "remarks": "휴대전화 번호",
+                    "constraints": {
+                      "nullable": false
+                    }
+                  }
+                },
+                {
+                  "column": {
+                    "name": "tel_no",
+                    "type": "${varcharType}(30)",
+                    "remarks": "전화번호"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "states",
+                    "type": "${varcharType}(50)",
+                    "remarks": "특별/광역시/도"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "city",
+                    "type": "${varcharType}(50)",
+                    "remarks": "시"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "street_dong",
+                    "type": "${varcharType}(50)",
+                    "remarks": "거리명/동"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "address",
+                    "type": "${varcharType}(50)",
+                    "remarks": "나머지 주소"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "zipcode",
+                    "type": "${varcharType}(5)",
+                    "remarks": "우편번호"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "create_dt",
+                    "type": "${datetimeType}",
+                    "defaultValueDate": "${now}"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "edit_dt",
+                    "type": "${datetimeType}",
+                    "defaultValueDate": "${now}"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "createIndex": {
+              "tableName": "user_detail",
+              "indexName": "user_detail_first_name_idx",
+              "columns": [
+                { "column": { "name": "first_name" } }
+              ]
+            }
+          },
+          {
+            "createIndex": {
+              "tableName": "user_detail",
+              "indexName": "user_detail_last_name_idx",
+              "columns": [
+                { "column": { "name": "last_name" } }
+              ]
+            }
+          },
+          {
+            "createIndex": {
+              "tableName": "user_detail",
+              "indexName": "user_detail_cel_no_idx",
+              "columns": [
+                { "column": { "name": "cel_no" } }
+              ]
+            }
+          },
+          {
+            "createIndex": {
+              "tableName": "user_detail",
+              "indexName": "user_detail_states_idx",
+              "columns": [
+                { "column": { "name": "states" } }
+              ]
+            }
+          },
+          {
+            "createIndex": {
+              "tableName": "user_detail",
+              "indexName": "user_detail_city_idx",
+              "columns": [
+                { "column": { "name": "city" } }
+              ]
+            }
+          },
+          {
+            "createIndex": {
+              "tableName": "user_detail",
+              "indexName": "user_detail_zipcode_idx",
+              "columns": [
+                { "column": { "name": "zipcode" } }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "changeSet": {
+        "id": "user-group-001",
+        "author": "dino",
+        "changes": [
+          {
+            "createTable": {
+              "tableName": "user_group",
+              "columns": [
+                {
+                  "column": {
+                    "name": "user_group",
+                    "type": "${varcharType}(100)",
+                    "constraints": {
+                      "primaryKey": true
+                    }
+                  }
+                },
+                {
+                  "column": {
+                    "name": "username",
+                    "type": "${varcharType}(100)",
+                    "constraints": {
+                      "primaryKey": true
+                    }
+                  }
+                },
+                {
+                  "column": {
+                    "name": "create_dt",
+                    "type": "${datetimeType}",
+                    "defaultValueDate": "${now}"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "edit_dt",
+                    "type": "${datetimeType}",
+                    "defaultValueDate": "${now}"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "createIndex": {
+              "tableName": "user_group",
+              "indexName": "user_group_idx",
+              "columns": [
+                { "column": { "name": "user_group" } }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "changeSet": {
+        "id": "user-login-log-001",
+        "author": "dino",
+        "changes": [
+          {
+            "createTable": {
+              "tableName": "user_login_log",
+              "columns": [
+                {
+                  "column": {
+                    "name": "id",
+                    "type": "${uuidType}",
+                    "constraints": {
+                      "primaryKey": true
+                    }
+                  }
+                },
+                {
+                  "column": {
+                    "name": "username",
+                    "type": "${varcharType}(100)",
+                    "remarks": "접속자 아이디",
+                    "constraints": {
+                      "nullable": false
+                    }
+                  }
+                },
+                {
+                  "column": {
+                    "name": "login_time",
+                    "type": "${datetimeType}",
+                    "defaultValue": "${now}",
+                    "remarks": "로그인 시간"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "access_ip",
+                    "type": "${varcharType}(15)",
+                    "remarks": "접속 아이피"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "success_yn",
+                    "type": "${varcharType}(1)",
+                    "remarks": "실패여부(Y:성공, N:실패)",
+                    "defaultValue": "Y"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "createIndex": {
+              "tableName": "user_login_log",
+              "indexName": "user_login_log_username_idx",
+              "columns": [
+                { "column": { "name": "username" } }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

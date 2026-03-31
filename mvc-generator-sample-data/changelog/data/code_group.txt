@@ -1,0 +1,3 @@
+code_group|code_group_name|description
+lang_cd|언어코드|언어코드
+auth_type|사용자유형|사용자유형

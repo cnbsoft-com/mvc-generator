@@ -1,0 +1,2 @@
+code_group|code_group_name|description
+page_size|페이지 갯수 목록|페이지 갯수 목록

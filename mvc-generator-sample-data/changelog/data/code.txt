@@ -1,0 +1,3 @@
+code_group|code|code_value|lang_cd|ord
+lang_cd|ko|한국어|ko|1
+lang_cd|en|영어|en|2
