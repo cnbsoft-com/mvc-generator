@@ -30,8 +30,8 @@ mvcGenerator {
 
     // ── 출력 경로 ────────────────────────────────────────────────
     outputDir         = file("${projectDir}/src/generated")
-    resourceOutputDir = file("${projectDir}/src/generated")
-    viewOutputDir     = file("${projectDir}/src/generated")
+    resourceOutputDir = file("${projectDir}/src/generated/resources")
+    viewOutputDir     = file("${projectDir}/src/generated/webapp")
 
     // ── 기본값이 아닌 경우에만 설정 필요 ──────────────────────────
     // modelSubPackage     = 'vo'
