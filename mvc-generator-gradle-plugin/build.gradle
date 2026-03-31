@@ -3,12 +3,12 @@ plugins {
     id 'maven-publish'
 }
 
-group = 'com.cnbsoft.util'
+group = 'com.cnbsoft.plugin'
 version = '1.0.0'
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
 }
 
 repositories {
@@ -34,7 +34,7 @@ dependencies {
 gradlePlugin {
     plugins {
         mvcGenerator {
-            id = 'com.cnbsoft.mvc-generator'
+            id = 'com.cnbsoft.plugin.mvc-generator'
             implementationClass = 'com.cnbsoft.generator.plugin.MvcGeneratorPlugin'
             displayName = 'MVC Code Generator'
             description = 'Generates Spring MVC + MyBatis scaffolding from database table metadata'

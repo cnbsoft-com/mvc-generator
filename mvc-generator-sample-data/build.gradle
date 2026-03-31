@@ -20,7 +20,7 @@ dependencies {
 def dbUrl = providers.gradleProperty('dbUrl').getOrElse('jdbc:oracle:thin:@localhost:1521/xe')
 def dbUsername = providers.gradleProperty('dbUsername').getOrElse('generator')
 def dbPassword = providers.gradleProperty('dbPassword').getOrElse('generator')
-def changelogFile = 'changelog/db.changelog-master.json'
+def changelogFile = providers.gradleProperty('changelogFile').getOrElse('changelog/db.changelog-master.json')
 
 tasks.register('update', JavaExec) {
     group = 'liquibase'

@@ -1,9 +1,9 @@
 plugins {
     id 'java'
-    id 'com.cnbsoft.mvc-generator' version '1.0.0'
+    id 'com.cnbsoft.plugin.mvc-generator' version '1.0.0'
 }
 
-group = 'kr.co.test'
+group = 'com.cnbsoft.sample'
 version = '0.0.1-SNAPSHOT'
 
 repositories {
@@ -26,7 +26,7 @@ mvcGenerator {
     tableNames = ['SAMPLE_TABLE']
 
     // ── 패키지 ──────────────────────────────────────────────────
-    basePackage = 'kr.co.test.web'
+    basePackage = 'com.hyundaicard.auth'
 
     // ── 출력 경로 ────────────────────────────────────────────────
     outputDir         = file("${projectDir}/src/generated")

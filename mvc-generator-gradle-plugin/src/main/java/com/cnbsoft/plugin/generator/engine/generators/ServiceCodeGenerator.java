@@ -1,0 +1,58 @@
+package com.cnbsoft.plugin.generator.engine.generators;
+
+import com.cnbsoft.plugin.generator.engine.ColumnInspector;
+import com.cnbsoft.plugin.generator.engine.GeneratorConfig;
+import com.cnbsoft.plugin.generator.engine.PathResolver;
+import com.cnbsoft.plugin.generator.engine.TemplateEngine;
+import com.cnbsoft.plugin.generator.util.StringUtil;
+import com.cnbsoft.plugin.generator.vo.ColumnInfo;
+import com.cnbsoft.plugin.generator.vo.PrimaryInfo;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class ServiceCodeGenerator {
+
+    private final GeneratorConfig config;
+    private final ColumnInspector inspector;
+    private final TemplateEngine engine;
+
+    public ServiceCodeGenerator(GeneratorConfig config, ColumnInspector inspector, TemplateEngine engine) {
+        this.config = config;
+        this.inspector = inspector;
+        this.engine = engine;
+    }
+
+    public void generate(String tableName) throws Exception {
+        List<ColumnInfo> columns = inspector.getColumnInfos(tableName);
+        List<PrimaryInfo> primaryInfos = inspector.getPrimaryInfo(tableName);
+
+        Map<String, Object> model = buildModel(tableName, columns, primaryInfos);
+
+        // 인터페이스
+        File ifaceFile = PathResolver.serviceInterfaceFile(config, tableName);
+        engine.generateFile(ifaceFile, config.tplService, model);
+
+        // 구현체
+        File implFile = PathResolver.serviceImplFile(config, tableName);
+        engine.generateFile(implFile, config.tplServiceImpl, model);
+    }
+
+    private Map<String, Object> buildModel(String tableName,
+                                            List<ColumnInfo> columns,
+                                            List<PrimaryInfo> primaryInfos) {
+        Map<String, Object> model = new HashMap<>();
+        model.put("tableName", tableName);
+        model.put("columns", columns);
+        model.put("primaryColumns", primaryInfos);
+        model.put("modelName", StringUtil.tableNameToJavaName(tableName).toLowerCase());
+        model.put("packagePath", config.basePackage);
+        model.put("modelPath", config.modelPath);
+        model.put("servicePath", config.servicePath);
+        model.put("persistencePath", config.persistencePath);
+        model.put("implPath", config.implPath);
+        return model;
+    }
+}
