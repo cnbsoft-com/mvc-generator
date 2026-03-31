@@ -1,0 +1,38 @@
+plugins {
+    id 'java'
+    id 'com.cnbsoft.plugin.source-generator' version '1.0-SNAPSHOT'
+}
+
+// -------------------------------------------------------------------------
+// Source Generator 설정
+// -------------------------------------------------------------------------
+sourceGenerator {
+    // DB 연결 (로컬 Oracle XE — containers/ 디렉토리의 Docker 환경 사용)
+    driverClassName = 'oracle.jdbc.driver.OracleDriver'
+    jdbcUrl         = 'jdbc:oracle:thin:@localhost:1521/xe'
+    username        = 'dino'
+    password        = 'dino123'
+    // 생성 코드 기본 패키지 및 출력 경로
+    packagePath   = 'com.cnbsoft.plugin.sample'
+    generatedPath = 'src/generated/java'
+}
+
+repositories {
+    mavenCentral()
+}
+
+// 생성된 소스는 generator 플러그인이 자동으로 main sourceSet에 추가함
+dependencies {
+    // 생성된 코드가 의존하는 라이브러리 (실제 프로젝트에 맞게 조정)
+//    implementation 'org.springframework.boot:spring-boot-starter-web:3.4.3'
+//    implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3'
+    compileOnly 'org.projectlombok:lombok:1.18.34'
+    annotationProcessor 'org.projectlombok:lombok:1.18.34'
+}
+sourceSets {
+    main {
+        java {
+            srcDirs "src/main/java", "src/generated/java"
+        }
+    }
+}

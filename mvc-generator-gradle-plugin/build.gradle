@@ -1,0 +1,53 @@
+plugins {
+    id 'java-gradle-plugin'
+    id 'maven-publish'
+}
+
+group = 'com.cnbsoft.util'
+version = '1.0.0'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+dependencies {
+    // 플러그인 실행 시 필요한 의존성
+    // Gradle 플러그인은 별도 클래스로더로 로드되므로 소비 프로젝트와 충돌 없음
+    implementation 'org.freemarker:freemarker:2.3.32'
+    implementation 'org.apache.commons:commons-dbcp2:2.9.0'
+
+    // Lombok (컴파일 시에만 사용)
+    compileOnly 'org.projectlombok:lombok:1.18.30'
+    annotationProcessor 'org.projectlombok:lombok:1.18.30'
+
+    // 테스트
+    testImplementation gradleTestKit()
+    testImplementation 'junit:junit:4.13.2'
+}
+
+gradlePlugin {
+    plugins {
+        mvcGenerator {
+            id = 'com.cnbsoft.mvc-generator'
+            implementationClass = 'com.cnbsoft.generator.plugin.MvcGeneratorPlugin'
+            displayName = 'MVC Code Generator'
+            description = 'Generates Spring MVC + MyBatis scaffolding from database table metadata'
+        }
+    }
+}
+
+publishing {
+    repositories {
+        mavenLocal()
+    }
+}
+
+wrapper {
+    gradleVersion = '8.5'
+}
