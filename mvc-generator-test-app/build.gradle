@@ -1,0 +1,60 @@
+plugins {
+    id 'java'
+    id 'com.cnbsoft.mvc-generator' version '1.0.0'
+}
+
+group = 'kr.co.test'
+version = '0.0.1-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+// ────────────────────────────────────────────────────────────────
+// MVC 코드 생성기 설정
+// ────────────────────────────────────────────────────────────────
+mvcGenerator {
+    // ── DB 접속 정보 ─────────────────────────────────────────────
+    dbDriver   = 'oracle.jdbc.driver.OracleDriver'
+    dbUrl      = 'jdbc:oracle:thin:@localhost:1521/xe'
+    dbUsername = 'dino'
+    // dbPassword 는 환경변수나 gradle.properties 에서 주입 권장
+    dbPassword = project.findProperty('dbPassword') ?: 'root'
+
+    // ── 생성 대상 테이블 (여러 개 가능) ───────────────────────────
+    tableNames = ['SAMPLE_TABLE']
+
+    // ── 패키지 ──────────────────────────────────────────────────
+    basePackage = 'kr.co.test.web'
+
+    // ── 출력 경로 ────────────────────────────────────────────────
+    outputDir         = file("${projectDir}/src/generated")
+    resourceOutputDir = file("${projectDir}/src/generated/resources")
+    viewOutputDir     = file("${projectDir}/src/generated/webapp")
+
+    // ── 기본값이 아닌 경우에만 설정 필요 ──────────────────────────
+    // modelSubPackage     = 'vo'
+    // controllerSubPackage = 'controller'
+    // serviceSubPackage   = 'service'
+    // persistenceSubPackage = 'mapper'
+    // implSubPackage      = 'impl'
+    // viewPath            = 'WEB-INF/views'
+    // viewExtension       = '.tpl'
+    // queryPath           = 'mapper'
+    // queryPrefix         = 'mapper-'
+    // queryExt            = 'xml'
+
+    // ── 기존 파일 덮어쓰기 여부 (기본: false) ─────────────────────
+    overwriteExisting = true
+    mapperType = 'annotation' // 'xml(기본값) 또는 annotation'
+    controllerType = 'api'   // 'web'(기본값) 또는 'api'
+
+    // ── 커스텀 템플릿 오버라이드 (선택) ───────────────────────────
+    // customTemplateDir = file("src/main/mvcgen/templates")
+}
+
+// ── MySQL JDBC 드라이버 등록 ──────────────────────────────────────
+dependencies {
+    mvcGeneratorJdbc 'com.oracle.database.jdbc:ojdbc11:23.6.0.24.10'
+}
