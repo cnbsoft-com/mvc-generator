@@ -1,4 +1,4 @@
-package com.cnbsoft.plugin.generator.interactive;
+package com.cnbsoft.generator.interactive;
 
 import java.util.Optional;
 
