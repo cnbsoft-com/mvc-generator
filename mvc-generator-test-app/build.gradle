@@ -20,7 +20,7 @@ mvcGenerator {
     dbUrl      = 'jdbc:oracle:thin:@localhost:1521/xe'
     dbUsername = 'dino'
     // dbPassword 는 환경변수나 gradle.properties 에서 주입 권장
-    dbPassword = project.findProperty('dbPassword') ?: 'root'
+    dbPassword = project.findProperty('dbPassword') ?: 'dino123'
 
     // ── 생성 대상 테이블 (여러 개 가능) ───────────────────────────
     tableNames = ['SAMPLE_TABLE']
