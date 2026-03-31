@@ -1,4 +1,4 @@
-package com.cnbsoft.generator.interactive;
+package com.cnbsoft.plugin.generator.interactive;
 
 import java.io.InputStream;
 import java.io.PrintStream;

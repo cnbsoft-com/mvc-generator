@@ -1,4 +1,4 @@
-package com.cnbsoft.generator.util;
+package com.cnbsoft.plugin.generator.util;
 
 import java.util.Arrays;
 import java.util.List;

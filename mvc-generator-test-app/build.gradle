@@ -3,7 +3,7 @@ plugins {
     id 'com.cnbsoft.mvc-generator' version '1.0.0'
 }
 
-group = 'kr.co.test'
+group = 'com.cnbsoft.sample'
 version = '0.0.1-SNAPSHOT'
 
 repositories {
@@ -26,12 +26,12 @@ mvcGenerator {
     tableNames = ['SAMPLE_TABLE']
 
     // ── 패키지 ──────────────────────────────────────────────────
-    basePackage = 'kr.co.test.web'
+    basePackage = 'com.hyundaicard.auth'
 
     // ── 출력 경로 ────────────────────────────────────────────────
     outputDir         = file("${projectDir}/src/generated")
-    resourceOutputDir = file("${projectDir}/src/generated/resources")
-    viewOutputDir     = file("${projectDir}/src/generated/webapp")
+    resourceOutputDir = file("${projectDir}/src/generated")
+    viewOutputDir     = file("${projectDir}/src/generated")
 
     // ── 기본값이 아닌 경우에만 설정 필요 ──────────────────────────
     // modelSubPackage     = 'vo'
@@ -54,7 +54,13 @@ mvcGenerator {
     // customTemplateDir = file("src/main/mvcgen/templates")
 }
 
-// ── MySQL JDBC 드라이버 등록 ──────────────────────────────────────
+// ── JDBC 드라이버 등록 ──────────────────────────────────────
 dependencies {
     mvcGeneratorJdbc 'com.oracle.database.jdbc:ojdbc11:23.6.0.24.10'
+}
+
+sourceSets {
+    java {
+        ["src/main/java", "src/generated/java"]
+    }
 }

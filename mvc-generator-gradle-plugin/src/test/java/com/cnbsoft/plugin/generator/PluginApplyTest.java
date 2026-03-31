@@ -1,4 +1,4 @@
-package com.cnbsoft.generator;
+package com.cnbsoft.plugin.generator;
 
 import org.gradle.testkit.runner.BuildResult;
 import org.gradle.testkit.runner.GradleRunner;
@@ -37,7 +37,7 @@ public class PluginApplyTest {
                 "    dbUrl      = 'jdbc:mysql://localhost:3306/test'\n" +
                 "    dbUsername = 'root'\n" +
                 "    tableNames = ['SAMPLE']\n" +
-                "    basePackage = 'kr.co.test'\n" +
+                "    basePackage = 'com.cnbsoft.test'\n" +
                 "    outputDir = file('src/main')\n" +
                 "}\n"
         );
@@ -54,7 +54,7 @@ public class PluginApplyTest {
         assertTrue("generateMvcController task expected",  output.contains("generateMvcController"));
         assertTrue("generateMvcService task expected",     output.contains("generateMvcService"));
         assertTrue("generateMvcPersistence task expected", output.contains("generateMvcPersistence"));
-        assertTrue("generateMvcQuery task expected",       output.contains("generateMvcQuery"));
+        assertTrue("generateMvcMapper task expected",       output.contains("generateMvcMapper"));
         assertTrue("generateMvcFormView task expected",    output.contains("generateMvcFormView"));
         assertTrue("generateMvcGetView task expected",     output.contains("generateMvcGetView"));
         assertTrue("generateMvcListView task expected",    output.contains("generateMvcListView"));

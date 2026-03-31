@@ -8,7 +8,8 @@ services:
       - "1521:1521"
     environment:
       - ORACLE_PASSWORD=oracle
-      - ORACLE_DATABASE=GENERATOR
+      - ORACLE_DATABASE=GENERATORll
+      -
       - APP_USER=dino
       - APP_USER_PASSWORD=dino123
     volumes:
@@ -19,7 +20,7 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
-    restart: unless-stopped
+#    restart: unless-stopped
 
 volumes:
   oracle-data:

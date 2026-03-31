@@ -3,12 +3,12 @@ plugins {
     id 'maven-publish'
 }
 
-group = 'com.cnbsoft.util'
+group = 'com.cnbsoft.plugin'
 version = '1.0.0'
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
 }
 
 repositories {

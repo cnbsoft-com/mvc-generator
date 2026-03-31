@@ -5,4 +5,4 @@ pluginManagement {
     }
 }
 
-rootProject.name = 'mvc-generator-test-consumer'
+rootProject.name = 'mvc-generator-test-app'

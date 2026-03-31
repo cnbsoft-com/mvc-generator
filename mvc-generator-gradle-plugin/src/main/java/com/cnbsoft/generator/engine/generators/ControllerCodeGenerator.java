@@ -4,9 +4,9 @@ import com.cnbsoft.generator.engine.ColumnInspector;
 import com.cnbsoft.generator.engine.GeneratorConfig;
 import com.cnbsoft.generator.engine.PathResolver;
 import com.cnbsoft.generator.engine.TemplateEngine;
-import com.cnbsoft.generator.util.StringUtil;
-import com.cnbsoft.generator.vo.ColumnInfo;
-import com.cnbsoft.generator.vo.PrimaryInfo;
+import com.cnbsoft.plugin.generator.util.StringUtil;
+import com.cnbsoft.plugin.generator.vo.ColumnInfo;
+import com.cnbsoft.plugin.generator.vo.PrimaryInfo;
 
 import java.io.File;
 import java.util.HashMap;

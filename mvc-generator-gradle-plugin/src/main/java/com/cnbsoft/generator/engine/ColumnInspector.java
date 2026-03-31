@@ -1,11 +1,10 @@
 package com.cnbsoft.generator.engine;
 
-import com.cnbsoft.generator.vo.ColumnInfo;
-import com.cnbsoft.generator.vo.PrimaryInfo;
+import com.cnbsoft.plugin.generator.vo.ColumnInfo;
+import com.cnbsoft.plugin.generator.vo.PrimaryInfo;
 
 import java.io.Closeable;
 import java.io.IOException;
-import java.lang.reflect.Constructor;
 import java.sql.*;
 import java.util.*;
 import java.util.logging.Logger;

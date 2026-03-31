@@ -1,6 +1,6 @@
 package com.cnbsoft.generator.engine;
 
-import com.cnbsoft.generator.util.StringUtil;
+import com.cnbsoft.plugin.generator.util.StringUtil;
 
 import java.io.File;
 
