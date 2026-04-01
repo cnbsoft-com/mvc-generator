@@ -108,7 +108,7 @@ public class ColumnInspector implements Closeable {
                 String columnName = meta.getColumnName(i);
                 ColumnInfo column = new ColumnInfo();
                 column.setCatalogName(meta.getCatalogName(i));
-                column.setColumnClassName(meta.getColumnClassName(i));
+                column.setColumnClassName(normalizeClassName(meta.getColumnClassName(i), meta.getColumnType(i)));
                 column.setColumnDisplaySize(meta.getColumnDisplaySize(i));
                 column.setColumnLabel(meta.getColumnLabel(i));
                 column.setColumnName(columnName);
@@ -166,6 +166,25 @@ public class ColumnInspector implements Closeable {
             }
         } catch (SQLException e) {
             throw new IOException("Failed to close DB connection", e);
+        }
+    }
+
+    // ────────────────────────────────────────────────────────────────
+    // JDBC 타입 코드 기준으로 DBMS 종속 클래스명을 표준 Java 타입으로 정규화
+    // (예: oracle.sql.TIMESTAMP → java.sql.Timestamp)
+    // ────────────────────────────────────────────────────────────────
+    private static String normalizeClassName(String rawClassName, int jdbcType) {
+        switch (jdbcType) {
+            case Types.TIMESTAMP:
+            case Types.TIMESTAMP_WITH_TIMEZONE:
+                return "java.sql.Timestamp";
+            case Types.DATE:
+                return "java.sql.Date";
+            case Types.TIME:
+            case Types.TIME_WITH_TIMEZONE:
+                return "java.sql.Time";
+            default:
+                return rawClassName;
         }
     }
 
