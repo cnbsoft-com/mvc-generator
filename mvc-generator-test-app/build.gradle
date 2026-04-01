@@ -26,7 +26,7 @@ mvcGenerator {
     tableNames = ['SAMPLE_TABLE']
 
     // ── 패키지 ──────────────────────────────────────────────────
-    basePackage = 'com.hyundaicard.auth'
+    basePackage = 'com.cnbsoft.generator-test'
 
     // ── 출력 경로 ────────────────────────────────────────────────
     outputDir         = file("${projectDir}/src/generated")
