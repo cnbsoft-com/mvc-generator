@@ -60,7 +60,9 @@ dependencies {
 }
 
 sourceSets {
-    java {
-        ["src/main/java", "src/generated/java"]
+    main {
+        java {
+            srcDirs =["src/main/java", "src/generated/java"]
+        }
     }
 }

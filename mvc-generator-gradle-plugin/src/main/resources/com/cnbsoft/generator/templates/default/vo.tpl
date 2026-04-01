@@ -3,15 +3,25 @@ package ${packagePath}.${modelPath};
 
 import org.apache.ibatis.type.Alias;
 
-<#assign capitalizedTableName="${tableName?replace('_', ' ')?capitalize?replace(' ','')}">
-
 @Alias("<@toClass source=tableName />")
 public class <@toClass source=tableName /> {
 
 	<#list columns as column>
     private <@fieldType source=column.columnClassName /> <@toField source=column.columnName />;
 	</#list>
-	
+
+    private <@toClass source=tableName />() {}
+
+    private <@toClass source=tableName />(Builder builder) {
+	<#list columns as column>
+        this.<@toField source=column.columnName /> = builder.<@toField source=column.columnName />;
+	</#list>
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
 	<#list columns as column>
     public <@fieldType source=column.columnClassName /> get<@toMethod source=column.columnName />() {
         return this.<@toField source=column.columnName />;
@@ -20,4 +30,21 @@ public class <@toClass source=tableName /> {
         this.<@toField source=column.columnName /> = <@toField source=column.columnName />;
     }
 	</#list>
+
+    public static class Builder {
+	<#list columns as column>
+        private <@fieldType source=column.columnClassName /> <@toField source=column.columnName />;
+	</#list>
+
+	<#list columns as column>
+        public Builder <@toField source=column.columnName />(<@fieldType source=column.columnClassName /> <@toField source=column.columnName />) {
+            this.<@toField source=column.columnName /> = <@toField source=column.columnName />;
+            return this;
+        }
+	</#list>
+
+        public <@toClass source=tableName /> build() {
+            return new <@toClass source=tableName />(this);
+        }
+    }
 }
