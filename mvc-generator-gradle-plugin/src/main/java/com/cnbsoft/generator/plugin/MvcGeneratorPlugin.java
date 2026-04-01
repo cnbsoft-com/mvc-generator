@@ -26,10 +26,9 @@ public class MvcGeneratorPlugin implements Plugin<Project> {
             c.setTransitive(false);
         });
 
-        // 3. 개별 컴포넌트 태스크 등록
+        // 3. 개별 컴포넌트 태스크 등록 (그룹 미지정 → tasks 목록에 노출되지 않음)
         TaskProvider<GenerateModelTask> modelTask = project.getTasks()
                 .register("generateMvcModel", GenerateModelTask.class, t -> {
-                    t.setGroup(TASK_GROUP);
                     t.setDescription("Generates the Model (VO) class from a database table");
                     t.getGeneratorExtension().set(ext);
                     t.getJdbcClasspath().setFrom(jdbcConfig);
@@ -37,7 +36,6 @@ public class MvcGeneratorPlugin implements Plugin<Project> {
 
         TaskProvider<GenerateControllerTask> controllerTask = project.getTasks()
                 .register("generateMvcController", GenerateControllerTask.class, t -> {
-                    t.setGroup(TASK_GROUP);
                     t.setDescription("Generates the Spring MVC Controller class");
                     t.getGeneratorExtension().set(ext);
                     t.getJdbcClasspath().setFrom(jdbcConfig);
@@ -45,7 +43,6 @@ public class MvcGeneratorPlugin implements Plugin<Project> {
 
         TaskProvider<GenerateServiceTask> serviceTask = project.getTasks()
                 .register("generateMvcService", GenerateServiceTask.class, t -> {
-                    t.setGroup(TASK_GROUP);
                     t.setDescription("Generates the Service interface and implementation");
                     t.getGeneratorExtension().set(ext);
                     t.getJdbcClasspath().setFrom(jdbcConfig);
@@ -53,7 +50,6 @@ public class MvcGeneratorPlugin implements Plugin<Project> {
 
         TaskProvider<GeneratePersistenceTask> persistenceTask = project.getTasks()
                 .register("generateMvcPersistence", GeneratePersistenceTask.class, t -> {
-                    t.setGroup(TASK_GROUP);
                     t.setDescription("Generates the MyBatis Mapper interface");
                     t.getGeneratorExtension().set(ext);
                     t.getJdbcClasspath().setFrom(jdbcConfig);
@@ -61,7 +57,6 @@ public class MvcGeneratorPlugin implements Plugin<Project> {
 
         TaskProvider<GenerateQueryTask> queryTask = project.getTasks()
                 .register("generateMvcQuery", GenerateQueryTask.class, t -> {
-                    t.setGroup(TASK_GROUP);
                     t.setDescription("Generates the MyBatis XML query mapper file");
                     t.getGeneratorExtension().set(ext);
                     t.getJdbcClasspath().setFrom(jdbcConfig);
@@ -69,7 +64,6 @@ public class MvcGeneratorPlugin implements Plugin<Project> {
 
         TaskProvider<GenerateFormViewTask> formViewTask = project.getTasks()
                 .register("generateMvcFormView", GenerateFormViewTask.class, t -> {
-                    t.setGroup(TASK_GROUP);
                     t.setDescription("Generates the Create/Edit form view template");
                     t.getGeneratorExtension().set(ext);
                     t.getJdbcClasspath().setFrom(jdbcConfig);
@@ -77,7 +71,6 @@ public class MvcGeneratorPlugin implements Plugin<Project> {
 
         TaskProvider<GenerateGetViewTask> getViewTask = project.getTasks()
                 .register("generateMvcGetView", GenerateGetViewTask.class, t -> {
-                    t.setGroup(TASK_GROUP);
                     t.setDescription("Generates the detail (get) view template");
                     t.getGeneratorExtension().set(ext);
                     t.getJdbcClasspath().setFrom(jdbcConfig);
@@ -85,13 +78,12 @@ public class MvcGeneratorPlugin implements Plugin<Project> {
 
         TaskProvider<GenerateListViewTask> listViewTask = project.getTasks()
                 .register("generateMvcListView", GenerateListViewTask.class, t -> {
-                    t.setGroup(TASK_GROUP);
                     t.setDescription("Generates the list view template");
                     t.getGeneratorExtension().set(ext);
                     t.getJdbcClasspath().setFrom(jdbcConfig);
                 });
 
-        // 4. 대화형 태스크
+        // 4. 대화형 태스크 (유일하게 노출되는 태스크)
         project.getTasks().register("generate",
                 GenerateMvcInteractiveTask.class, t -> {
                     t.setGroup(TASK_GROUP);
@@ -103,9 +95,8 @@ public class MvcGeneratorPlugin implements Plugin<Project> {
                     t.getOutputs().upToDateWhen(task -> false);
                 });
 
-        // 5. 전체 집계 태스크
+        // 5. 전체 집계 태스크 (그룹 미지정 → tasks 목록에 노출되지 않음)
         project.getTasks().register("generateMvc", t -> {
-            t.setGroup(TASK_GROUP);
             t.setDescription("Generates all MVC components (Model, Controller, Service, Persistence, Query, Views)");
             t.dependsOn(
                     modelTask, controllerTask, serviceTask,
