@@ -15,6 +15,7 @@
 - [생성 파일 목록](#생성-파일-목록)
 - [Gradle Tasks](#gradle-tasks)
 - [개발 환경 구성](#개발-환경-구성)
+- [예제 앱으로 빠르게 시작하기](#예제-앱으로-빠르게-시작하기)
 
 ---
 
@@ -268,3 +269,50 @@ cd mvc-generator-gradle-plugin
 ```
 
 > 테스트는 Gradle TestKit 기반의 플러그인 통합 테스트이며, DB 연결 없이 플러그인 적용 및 Task 등록 여부를 검증합니다.
+
+---
+
+## 예제 앱으로 빠르게 시작하기
+
+`mvc-generator-test-app`은 플러그인이 적용된 예제 프로젝트입니다.
+Oracle DB(`localhost:1521/xe`, user: `dino`)와 Docker 컨테이너가 실행 중인 상태에서 아래 명령을 실행합니다.
+
+> **현재 설정** (`mvc-generator-test-app/build.gradle`)
+> - 대상 테이블: `SAMPLE_TABLE`
+> - 컨트롤러 방식: `api` (@RestController)
+> - 매퍼 방식: `annotation`
+> - 출력 경로: `src/generated/`
+
+### 1단계: 플러그인 로컬 게시
+
+```bash
+cd mvc-generator-gradle-plugin
+./gradlew publishToMavenLocal
+```
+
+### 2단계: 예제 앱에서 코드 생성
+
+```bash
+cd mvc-generator-test-app
+
+# 전체 코드 일괄 생성
+./gradlew generateMvc
+
+# 또는 계층별 개별 생성
+./gradlew generateMvcModel          # Model (VO)
+./gradlew generateMvcController     # Controller
+./gradlew generateMvcService        # Service + ServiceImpl
+./gradlew generateMvcPersistence    # MyBatis Mapper Interface
+./gradlew generateMvcFormView       # 입력 폼 뷰
+./gradlew generateMvcGetView        # 상세 뷰
+./gradlew generateMvcListView       # 목록 뷰
+
+# 대화형 모드 (테이블/생성 유형 선택)
+./gradlew generate --no-daemon --console=plain
+```
+
+### DB 패스워드를 외부에서 주입하는 경우
+
+```bash
+./gradlew generateMvc -PdbPassword=mypassword
+```
