@@ -6,39 +6,39 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import ${packagePath}.${persistencePath}.<@toAllLow source=tableName />.<@toClass source=tableName />${persistencePath?cap_first};
-import ${packagePath}.${modelPath}.<@toClass source=tableName />;
-import ${packagePath}.${servicePath}.<@toAllLow source=tableName />.<@toClass source=tableName />Service;
+import ${packagePath}.${persistencePath}.<@toAllLow source=tableName />.<@toClass source=tableName />${mapperSuffix};
+import ${packagePath}.${modelPath}.<@toClass source=tableName />${modelSuffix};
+import ${packagePath}.${servicePath}.<@toAllLow source=tableName />.<@toClass source=tableName />${serviceSuffix};
 
 @Service
-public class <@toClass source=tableName />ServiceImpl implements <@toClass source=tableName />Service {
-	
+public class <@toClass source=tableName />${serviceImplSuffix} implements <@toClass source=tableName />${serviceSuffix} {
+
 	@Autowired
-	private <@toClass source=tableName />${persistencePath?cap_first} <@toField source=tableName />${persistencePath?cap_first};
-	
+	private <@toClass source=tableName />${mapperSuffix} <@toField source=tableName />${mapperSuffix?uncap_first};
+
 	@Override
-	public <@toClass source=tableName /> get(<@toClass source=tableName /> <@toField source=tableName />){
-		return <@toField source=tableName />${persistencePath?cap_first}.get(<@toField source=tableName />);
+	public <@toClass source=tableName />${modelSuffix} get(<@toClass source=tableName />${modelSuffix} <@toField source=tableName />){
+		return <@toField source=tableName />${mapperSuffix?uncap_first}.get(<@toField source=tableName />);
 	}
-	
+
 	@Override
-	public List${"<"}<@toClass source=tableName />${">"} getList(<@toClass source=tableName /> <@toField source=tableName />){
-		return <@toField source=tableName />${persistencePath?cap_first}.getList(<@toField source=tableName />);
+	public List${"<"}<@toClass source=tableName />${modelSuffix}${">"} getList(<@toClass source=tableName />${modelSuffix} <@toField source=tableName />){
+		return <@toField source=tableName />${mapperSuffix?uncap_first}.getList(<@toField source=tableName />);
 	}
-	
+
 	@Override
-	public int create(<@toClass source=tableName /> <@toField source=tableName />){
-		return <@toField source=tableName />${persistencePath?cap_first}.create(<@toField source=tableName />);
+	public int create(<@toClass source=tableName />${modelSuffix} <@toField source=tableName />){
+		return <@toField source=tableName />${mapperSuffix?uncap_first}.create(<@toField source=tableName />);
 	}
-	
+
 	@Override
-	public int delete(<@toClass source=tableName /> <@toField source=tableName />){
-		return <@toField source=tableName />${persistencePath?cap_first}.delete(<@toField source=tableName />);
+	public int delete(<@toClass source=tableName />${modelSuffix} <@toField source=tableName />){
+		return <@toField source=tableName />${mapperSuffix?uncap_first}.delete(<@toField source=tableName />);
 	}
-	
+
 	@Override
-	public int update(<@toClass source=tableName /> <@toField source=tableName />){
-		return <@toField source=tableName />${persistencePath?cap_first}.update(<@toField source=tableName />);
+	public int update(<@toClass source=tableName />${modelSuffix} <@toField source=tableName />){
+		return <@toField source=tableName />${mapperSuffix?uncap_first}.update(<@toField source=tableName />);
 	}
-	
+
 }

@@ -39,6 +39,11 @@ public class QueryCodeGenerator {
         model.put("servicePath", config.servicePath);
         model.put("persistencePath", config.persistencePath);
         model.put("implPath", config.implPath);
+        model.put("modelSuffix", config.modelSuffix);
+        model.put("controllerSuffix", config.controllerSuffix);
+        model.put("serviceSuffix", config.serviceSuffix);
+        model.put("serviceImplSuffix", config.serviceImplSuffix);
+        model.put("mapperSuffix", config.mapperSuffix);
 
         File outFile = PathResolver.queryXmlFile(config, tableName);
         engine.generateFile(outFile, config.tplQuery, model);

@@ -22,8 +22,8 @@ mvcGenerator {
     // dbPassword 는 환경변수나 gradle.properties 에서 주입 권장
     dbPassword = project.findProperty('dbPassword') ?: 'dino123'
 
-    // ── 생성 대상 테이블 (여러 개 가능) ───────────────────────────
-    tableNames = ['SAMPLE_TABLE']
+    // ── 생성 대상 테이블 ─────────────────────────────────────────
+    tableNames = ['CODE']
 
     // ── 패키지 ──────────────────────────────────────────────────
     basePackage = 'com.cnbsoft.generator.test'
@@ -49,6 +49,12 @@ mvcGenerator {
     overwriteExisting = true
     mapperType = 'annotation' // 'xml(기본값) 또는 annotation'
     controllerType = 'api'   // 'web'(기본값) 또는 'api'
+    modelSuffix       = 'Dto'         // 기본값: "" → CodeDto.java
+    controllerSuffix  = 'Resource'    // 기본값: "Controller" → CodeResource.java
+    serviceSuffix     = 'Svc'         // 기본값: "Service" → CodeSvc.java
+    serviceImplSuffix = 'SvcImpl'     // 기본값: "ServiceImpl" → CodeSvcImpl.java
+    mapperSuffix      = '00Mapper'         // 기본값: "Mapper" → CodeDao.java
+
 
     // ── 커스텀 템플릿 오버라이드 (선택) ───────────────────────────
     // customTemplateDir = file("src/main/mvcgen/templates")
@@ -57,12 +63,21 @@ mvcGenerator {
 // ── JDBC 드라이버 등록 ──────────────────────────────────────
 dependencies {
     mvcGeneratorJdbc 'com.oracle.database.jdbc:ojdbc11:23.6.0.24.10'
+
+    compileOnly 'org.mybatis:mybatis:3.5.16'
+    compileOnly 'org.springframework:spring-webmvc:6.2.5'
+    compileOnly 'org.springframework:spring-context:6.2.5'
 }
 
 sourceSets {
     main {
         java {
-            srcDirs =["src/main/java", "src/generated/java"]
+            srcDirs =["src/main/java"]
+        }
+    }
+    generated {
+        java {
+            srcDirs =["src/generated/java"]
         }
     }
 }

@@ -13,37 +13,38 @@ public class PathResolver {
     // ── Java 소스 파일 ────────────────────────────────────────────────
 
     public static File modelFile(GeneratorConfig cfg, String tableName) {
+        String javaName = StringUtil.tableNameToJavaName(tableName);
         return javaFile(cfg,
                 cfg.modelPath,
-                StringUtil.tableNameToJavaName(tableName) + ".java");
+                javaName + cfg.modelSuffix + ".java");
     }
 
     public static File controllerFile(GeneratorConfig cfg, String tableName) {
+        String javaName = StringUtil.tableNameToJavaName(tableName);
         return javaFile(cfg,
                 cfg.controllerPath,
-                StringUtil.tableNameToJavaName(tableName) + "Controller.java");
+                javaName + cfg.controllerSuffix + ".java");
     }
 
     public static File serviceInterfaceFile(GeneratorConfig cfg, String tableName) {
         String javaName = StringUtil.tableNameToJavaName(tableName);
         return javaFile(cfg,
                 cfg.servicePath + File.separator + javaName.toLowerCase(),
-                javaName + "Service.java");
+                javaName + cfg.serviceSuffix + ".java");
     }
 
     public static File serviceImplFile(GeneratorConfig cfg, String tableName) {
         String javaName = StringUtil.tableNameToJavaName(tableName);
         return javaFile(cfg,
                 cfg.servicePath + File.separator + javaName.toLowerCase() + File.separator + cfg.implPath,
-                javaName + "ServiceImpl.java");
+                javaName + cfg.serviceImplSuffix + ".java");
     }
 
     public static File persistenceFile(GeneratorConfig cfg, String tableName) {
         String javaName = StringUtil.tableNameToJavaName(tableName);
-        String suffix = StringUtil.capitalize(cfg.persistencePath); // e.g. "Mapper"
         return javaFile(cfg,
                 cfg.persistencePath + File.separator + javaName.toLowerCase(),
-                javaName + suffix + ".java");
+                javaName + cfg.mapperSuffix + ".java");
     }
 
     // ── 리소스 파일 ──────────────────────────────────────────────────

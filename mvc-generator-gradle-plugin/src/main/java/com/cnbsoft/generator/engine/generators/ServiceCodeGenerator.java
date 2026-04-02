@@ -53,6 +53,11 @@ public class ServiceCodeGenerator {
         model.put("servicePath", config.servicePath);
         model.put("persistencePath", config.persistencePath);
         model.put("implPath", config.implPath);
+        model.put("modelSuffix", config.modelSuffix);
+        model.put("controllerSuffix", config.controllerSuffix);
+        model.put("serviceSuffix", config.serviceSuffix);
+        model.put("serviceImplSuffix", config.serviceImplSuffix);
+        model.put("mapperSuffix", config.mapperSuffix);
         return model;
     }
 }

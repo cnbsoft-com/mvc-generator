@@ -95,6 +95,11 @@ public abstract class MvcGeneratorBaseTask extends DefaultTask {
                 .overwriteExisting(ext.getOverwriteExisting().get())
                 .mapperType(ext.getMapperType().get())
                 .controllerType(ext.getControllerType().get())
+                .modelSuffix(ext.getModelSuffix().get())
+                .controllerSuffix(ext.getControllerSuffix().get())
+                .serviceSuffix(ext.getServiceSuffix().get())
+                .serviceImplSuffix(ext.getServiceImplSuffix().get())
+                .mapperSuffix(ext.getMapperSuffix().get())
                 .build();
     }
 

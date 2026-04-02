@@ -11,8 +11,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 </#if>
 
-import ${packagePath}.${servicePath}.<@toAllLow source=tableName />.<@toClass source=tableName />Service;
-import ${packagePath}.${modelPath}.<@toClass source=tableName />;
+import ${packagePath}.${servicePath}.<@toAllLow source=tableName />.<@toClass source=tableName />${serviceSuffix};
+import ${packagePath}.${modelPath}.<@toClass source=tableName />${modelSuffix};
 
 <#if controllerType == "api">
 @RestController
@@ -21,64 +21,64 @@ import ${packagePath}.${modelPath}.<@toClass source=tableName />;
 @Controller
 @RequestMapping("/<@toAllLow source=tableName />/*")
 </#if>
-public class <@toClass source=tableName />Controller {
+public class <@toClass source=tableName />${controllerSuffix} {
 
 	@Autowired
-	private <@toClass source=tableName />Service <@toField source=tableName />Service;
+	private <@toClass source=tableName />${serviceSuffix} <@toField source=tableName />${serviceSuffix?uncap_first};
 
 <#if controllerType == "api">
 	@GetMapping("/get")
-	public <@toClass source=tableName /> get(@ModelAttribute <@toClass source=tableName /> <@toField source=tableName />) {
-		return <@toField source=tableName />Service.get(<@toField source=tableName />);
+	public <@toClass source=tableName />${modelSuffix} get(@ModelAttribute <@toClass source=tableName />${modelSuffix} <@toField source=tableName />) {
+		return <@toField source=tableName />${serviceSuffix?uncap_first}.get(<@toField source=tableName />);
 	}
 
 	@GetMapping("/list")
-	public List${"<"}<@toClass source=tableName />${">"} getList(@ModelAttribute <@toClass source=tableName /> <@toField source=tableName />) {
-		return <@toField source=tableName />Service.getList(<@toField source=tableName />);
+	public List${"<"}<@toClass source=tableName />${modelSuffix}${">"} getList(@ModelAttribute <@toClass source=tableName />${modelSuffix} <@toField source=tableName />) {
+		return <@toField source=tableName />${serviceSuffix?uncap_first}.getList(<@toField source=tableName />);
 	}
 
 	@PostMapping("/create")
-	public int create(@RequestBody <@toClass source=tableName /> <@toField source=tableName />) {
-		return <@toField source=tableName />Service.create(<@toField source=tableName />);
+	public int create(@RequestBody <@toClass source=tableName />${modelSuffix} <@toField source=tableName />) {
+		return <@toField source=tableName />${serviceSuffix?uncap_first}.create(<@toField source=tableName />);
 	}
 
 	@PutMapping("/update")
-	public int update(@RequestBody <@toClass source=tableName /> <@toField source=tableName />) {
-		return <@toField source=tableName />Service.update(<@toField source=tableName />);
+	public int update(@RequestBody <@toClass source=tableName />${modelSuffix} <@toField source=tableName />) {
+		return <@toField source=tableName />${serviceSuffix?uncap_first}.update(<@toField source=tableName />);
 	}
 
 	@DeleteMapping("/delete")
-	public int delete(@ModelAttribute <@toClass source=tableName /> <@toField source=tableName />) {
-		return <@toField source=tableName />Service.delete(<@toField source=tableName />);
+	public int delete(@ModelAttribute <@toClass source=tableName />${modelSuffix} <@toField source=tableName />) {
+		return <@toField source=tableName />${serviceSuffix?uncap_first}.delete(<@toField source=tableName />);
 	}
 <#else>
 	@PostMapping
-	public void form(@ModelAttribute("${tableName?lower_case}_form") <@toClass source=tableName /> <@toField source=tableName />) {
+	public void form(@ModelAttribute("${tableName?lower_case}_form") <@toClass source=tableName />${modelSuffix} <@toField source=tableName />) {
 	}
 
 	@GetMapping
-	public void get(@ModelAttribute("${tableName?lower_case}_form") <@toClass source=tableName /> <@toField source=tableName />, Model model) {
-		model.addAttribute("<@toField source=tableName />", <@toField source=tableName />Service.get(<@toField source=tableName />));
+	public void get(@ModelAttribute("${tableName?lower_case}_form") <@toClass source=tableName />${modelSuffix} <@toField source=tableName />, Model model) {
+		model.addAttribute("<@toField source=tableName />", <@toField source=tableName />${serviceSuffix?uncap_first}.get(<@toField source=tableName />));
 	}
 
 	@GetMapping
-	public void list(@ModelAttribute <@toClass source=tableName /> <@toField source=tableName />, Model model) {
-		model.addAttribute("<@toField source=tableName />List", <@toField source=tableName />Service.getList(<@toField source=tableName />));
+	public void list(@ModelAttribute <@toClass source=tableName />${modelSuffix} <@toField source=tableName />, Model model) {
+		model.addAttribute("<@toField source=tableName />List", <@toField source=tableName />${serviceSuffix?uncap_first}.getList(<@toField source=tableName />));
 	}
 
 	@PostMapping
-	public void create(@ModelAttribute <@toClass source=tableName /> <@toField source=tableName />) {
-		<@toField source=tableName />Service.create(<@toField source=tableName />);
+	public void create(@ModelAttribute <@toClass source=tableName />${modelSuffix} <@toField source=tableName />) {
+		<@toField source=tableName />${serviceSuffix?uncap_first}.create(<@toField source=tableName />);
 	}
 
 	@PostMapping
-	public void delete(@ModelAttribute <@toClass source=tableName /> <@toField source=tableName />) {
-		<@toField source=tableName />Service.delete(<@toField source=tableName />);
+	public void delete(@ModelAttribute <@toClass source=tableName />${modelSuffix} <@toField source=tableName />) {
+		<@toField source=tableName />${serviceSuffix?uncap_first}.delete(<@toField source=tableName />);
 	}
 
 	@PutMapping("/{id}")
-	public void update(@PathVariable("id") String id, @ModelAttribute <@toClass source=tableName /> <@toField source=tableName />) {
-		<@toField source=tableName />Service.update(<@toField source=tableName />);
+	public void update(@PathVariable("id") String id, @ModelAttribute <@toClass source=tableName />${modelSuffix} <@toField source=tableName />) {
+		<@toField source=tableName />${serviceSuffix?uncap_first}.update(<@toField source=tableName />);
 	}
 </#if>
 

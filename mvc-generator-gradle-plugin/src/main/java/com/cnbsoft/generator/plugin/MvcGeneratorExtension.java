@@ -79,6 +79,13 @@ public class MvcGeneratorExtension {
     // "api" : @RestController (JSON 반환)
     private final Property<String> controllerType;
 
+    // ── 각 계층 클래스명 접미사 ──────────────────────────────────────
+    private final Property<String> modelSuffix;
+    private final Property<String> controllerSuffix;
+    private final Property<String> serviceSuffix;
+    private final Property<String> serviceImplSuffix;
+    private final Property<String> mapperSuffix;
+
     @Inject
     public MvcGeneratorExtension(ObjectFactory objects) {
         dbDriver            = objects.property(String.class);
@@ -106,6 +113,11 @@ public class MvcGeneratorExtension {
         overwriteExisting   = objects.property(Boolean.class).convention(false);
         mapperType          = objects.property(String.class).convention("xml");
         controllerType      = objects.property(String.class).convention("web");
+        modelSuffix         = objects.property(String.class).convention("");
+        controllerSuffix    = objects.property(String.class).convention("Controller");
+        serviceSuffix       = objects.property(String.class).convention("Service");
+        serviceImplSuffix   = objects.property(String.class).convention("ServiceImpl");
+        mapperSuffix        = objects.property(String.class).convention("Mapper");
     }
 
     public Property<String> getDbDriver()              { return dbDriver; }
@@ -133,4 +145,9 @@ public class MvcGeneratorExtension {
     public Property<Boolean> getOverwriteExisting()    { return overwriteExisting; }
     public Property<String>  getMapperType()             { return mapperType; }
     public Property<String>  getControllerType()         { return controllerType; }
+    public Property<String>  getModelSuffix()            { return modelSuffix; }
+    public Property<String>  getControllerSuffix()       { return controllerSuffix; }
+    public Property<String>  getServiceSuffix()          { return serviceSuffix; }
+    public Property<String>  getServiceImplSuffix()      { return serviceImplSuffix; }
+    public Property<String>  getMapperSuffix()           { return mapperSuffix; }
 }

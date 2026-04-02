@@ -55,6 +55,13 @@ public class GeneratorConfig {
     // ── Controller 유형 ("web" | "api") ─────────────────────────────
     public final String controllerType;
 
+    // ── 각 계층 클래스명 접미사 ─────────────────────────────────────
+    public final String modelSuffix;
+    public final String controllerSuffix;
+    public final String serviceSuffix;
+    public final String serviceImplSuffix;
+    public final String mapperSuffix;
+
     // ── 템플릿 파일명 (generate.properties 의 키와 동일) ─────────────
     public final String tplModel         = "vo";
     public final String tplController    = "controller";
@@ -94,6 +101,11 @@ public class GeneratorConfig {
         this.overwriteExisting  = b.overwriteExisting;
         this.mapperType         = b.mapperType;
         this.controllerType     = b.controllerType;
+        this.modelSuffix        = b.modelSuffix;
+        this.controllerSuffix   = b.controllerSuffix;
+        this.serviceSuffix      = b.serviceSuffix;
+        this.serviceImplSuffix  = b.serviceImplSuffix;
+        this.mapperSuffix       = b.mapperSuffix;
     }
 
     public static Builder builder() { return new Builder(); }
@@ -124,6 +136,11 @@ public class GeneratorConfig {
         private boolean overwriteExisting  = false;
         private String mapperType          = "xml";
         private String controllerType      = "web";
+        private String modelSuffix         = "";
+        private String controllerSuffix    = "Controller";
+        private String serviceSuffix       = "Service";
+        private String serviceImplSuffix   = "ServiceImpl";
+        private String mapperSuffix        = "Mapper";
 
         public Builder dbDriver(String v)          { this.dbDriver = v; return this; }
         public Builder dbUrl(String v)             { this.dbUrl = v; return this; }
@@ -148,8 +165,13 @@ public class GeneratorConfig {
         public Builder templateSet(String v)       { this.templateSet = v; return this; }
         public Builder customTemplateDir(File v)   { this.customTemplateDir = v; return this; }
         public Builder overwriteExisting(boolean v){ this.overwriteExisting = v; return this; }
-        public Builder mapperType(String v)        { this.mapperType = v; return this; }
-        public Builder controllerType(String v)    { this.controllerType = v; return this; }
+        public Builder mapperType(String v)          { this.mapperType = v; return this; }
+        public Builder controllerType(String v)      { this.controllerType = v; return this; }
+        public Builder modelSuffix(String v)         { this.modelSuffix = v; return this; }
+        public Builder controllerSuffix(String v)    { this.controllerSuffix = v; return this; }
+        public Builder serviceSuffix(String v)       { this.serviceSuffix = v; return this; }
+        public Builder serviceImplSuffix(String v)   { this.serviceImplSuffix = v; return this; }
+        public Builder mapperSuffix(String v)        { this.mapperSuffix = v; return this; }
 
         public GeneratorConfig build() {
             if (dbDriver == null || dbUrl == null || dbUsername == null) {

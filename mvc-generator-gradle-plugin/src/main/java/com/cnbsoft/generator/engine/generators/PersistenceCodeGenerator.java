@@ -39,6 +39,11 @@ public class PersistenceCodeGenerator {
         model.put("servicePath", config.servicePath);
         model.put("persistencePath", config.persistencePath);
         model.put("implPath", config.implPath);
+        model.put("modelSuffix", config.modelSuffix);
+        model.put("controllerSuffix", config.controllerSuffix);
+        model.put("serviceSuffix", config.serviceSuffix);
+        model.put("serviceImplSuffix", config.serviceImplSuffix);
+        model.put("mapperSuffix", config.mapperSuffix);
 
         // Mapper 인터페이스만 생성 (기존 코드와 동일 - impl은 주석처리된 상태)
         File outFile = PathResolver.persistenceFile(config, tableName);

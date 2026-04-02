@@ -1,8 +1,8 @@
 <#include "common.tpl">
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD ${mapperSuffix} 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="${packagePath}.${persistencePath}.${modelName}.<@toClass source=tableName />Mapper">
+<mapper namespace="${packagePath}.${persistencePath}.${modelName}.<@toClass source=tableName />${mapperSuffix}">
 	<resultMap id="<@toClass source=tableName />ResultMap" type="<@toClass source=tableName />">
 		<#list columns as column>
 		<result property="<@toField source=column.columnName />" column="${column.columnName?upper_case}" />
@@ -13,13 +13,13 @@
 	</sql>
 
 	<select id="get" parameterType="<@toClass source=tableName />" resultMap="<@toClass source=tableName />ResultMap">
-		SELECT <include refid="${packagePath}.${persistencePath}.${modelName}.<@toClass source=tableName />Mapper.baseColumnList" />
+		SELECT <include refid="${packagePath}.${persistencePath}.${modelName}.<@toClass source=tableName />${mapperSuffix}.baseColumnList" />
 		FROM ${tableName?upper_case}
 		<#list columns as column><#if column.primaryKey == true><#if column_index == 0>WHERE <#else>AND </#if> ${column.columnName?upper_case} = ${"#{"}<@toField source=column.columnName />}</#if></#list>
 	</select>
 
 	<select id="getList" parameterType="<@toClass source=tableName />" resultMap="<@toClass source=tableName />ResultMap">
-		SELECT <include refid="${packagePath}.${persistencePath}.${modelName}.<@toClass source=tableName />Mapper.baseColumnList" />
+		SELECT <include refid="${packagePath}.${persistencePath}.${modelName}.<@toClass source=tableName />${mapperSuffix}.baseColumnList" />
 		FROM ${tableName?upper_case}
 		<where>
 			<#list columns as column>

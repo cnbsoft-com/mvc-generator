@@ -4,15 +4,15 @@ package ${packagePath}.${modelPath};
 import org.apache.ibatis.type.Alias;
 
 @Alias("<@toClass source=tableName />")
-public class <@toClass source=tableName /> {
+public class <@toClass source=tableName />${modelSuffix} {
 
 	<#list columns as column>
     private <@fieldType source=column.columnClassName /> <@toField source=column.columnName />;
 	</#list>
 
-    private <@toClass source=tableName />() {}
+    private <@toClass source=tableName />${modelSuffix}() {}
 
-    private <@toClass source=tableName />(Builder builder) {
+    private <@toClass source=tableName />${modelSuffix}(Builder builder) {
 	<#list columns as column>
         this.<@toField source=column.columnName /> = builder.<@toField source=column.columnName />;
 	</#list>
@@ -43,8 +43,8 @@ public class <@toClass source=tableName /> {
         }
 	</#list>
 
-        public <@toClass source=tableName /> build() {
-            return new <@toClass source=tableName />(this);
+        public <@toClass source=tableName />${modelSuffix} build() {
+            return new <@toClass source=tableName />${modelSuffix}(this);
         }
     }
 }

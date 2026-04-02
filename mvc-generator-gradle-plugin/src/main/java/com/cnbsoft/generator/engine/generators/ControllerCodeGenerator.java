@@ -41,6 +41,11 @@ public class ControllerCodeGenerator {
         model.put("persistencePath", config.persistencePath);
         model.put("implPath", config.implPath);
         model.put("controllerType", config.controllerType);
+        model.put("modelSuffix", config.modelSuffix);
+        model.put("controllerSuffix", config.controllerSuffix);
+        model.put("serviceSuffix", config.serviceSuffix);
+        model.put("serviceImplSuffix", config.serviceImplSuffix);
+        model.put("mapperSuffix", config.mapperSuffix);
 
         File outFile = PathResolver.controllerFile(config, tableName);
         engine.generateFile(outFile, config.tplController, model);
