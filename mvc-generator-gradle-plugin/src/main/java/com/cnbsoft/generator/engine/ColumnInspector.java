@@ -46,8 +46,8 @@ public class ColumnInspector implements Closeable {
 
     public List<PrimaryInfo> getPrimaryInfo(String tableName) throws SQLException {
         DatabaseMetaData meta = connection.getMetaData();
-        String schema = connection.getMetaData().getUserName();
-        ResultSet rs = meta.getPrimaryKeys(connection.getCatalog(), schema, tableName.toUpperCase());
+        String schema = getSchema();
+        ResultSet rs = meta.getPrimaryKeys(connection.getCatalog(), schema, normalizeIdentifier(tableName));
 
         List<PrimaryInfo> ret = new ArrayList<>();
         while (rs.next()) {
@@ -90,18 +90,18 @@ public class ColumnInspector implements Closeable {
     }
 
     public List<ColumnInfo> getColumnInfos(String tableName) throws SQLException {
-        String upperName = tableName.toUpperCase();
-        if (columnCache.containsKey(upperName)) {
-            return columnCache.get(upperName);
+        String normalizedName = normalizeIdentifier(tableName);
+        if (columnCache.containsKey(normalizedName)) {
+            return columnCache.get(normalizedName);
         }
 
         Statement statement = connection.createStatement();
-        ResultSet rs = statement.executeQuery(String.format(COLUMN_QUERY, upperName));
+        ResultSet rs = statement.executeQuery(String.format(COLUMN_QUERY, normalizedName));
         ResultSetMetaData meta = rs.getMetaData();
         int cnt = meta.getColumnCount();
 
         List<ColumnInfo> columnList = new ArrayList<>();
-        List<PrimaryInfo> primaryInfos = getPrimaryInfo(upperName);
+        List<PrimaryInfo> primaryInfos = getPrimaryInfo(normalizedName);
 
         for (int i = 1; i <= cnt; i++) {
             try {
@@ -136,26 +136,37 @@ public class ColumnInspector implements Closeable {
         rs.close();
         statement.close();
 
-        columnCache.put(upperName, columnList);
+        columnCache.put(normalizedName, columnList);
         return columnList;
     }
 
     public List<String> listTablesLike(String pattern) throws SQLException {
-        DatabaseMetaData meta = connection.getMetaData();
-        String schema = connection.getMetaData().getUserName();
+        String schema = getSchema();
+        String normalizedPattern = normalizeIdentifier(pattern);
 
-        // 대·소문자 모두 검색 후 대문자로 정규화해 중복 제거
-        // - Oracle: 카탈로그에 대문자로 저장 → 대·소문자 패턴 모두 시도
-        // - 반환된 이름은 toUpperCase()로 통일해 "TB_USER" / "tb_user" 중복 방지
         Set<String> seen = new LinkedHashSet<>();
-        for (String p : new String[]{pattern.toUpperCase(), pattern.toLowerCase()}) {
-            ResultSet rs = meta.getTables(connection.getCatalog(), schema, p, new String[]{"TABLE"});
-            while (rs.next()) {
-                seen.add(rs.getString("TABLE_NAME").toUpperCase());
-            }
-            rs.close();
+        ResultSet rs = connection.getMetaData().getTables(
+                connection.getCatalog(), schema, normalizedPattern, new String[]{"TABLE"});
+        while (rs.next()) {
+            seen.add(rs.getString("TABLE_NAME"));
         }
+        rs.close();
         return new ArrayList<>(seen);
+    }
+
+    /** JDBC 4.1: connection.getSchema() → PostgreSQL은 "public", Oracle은 username 반환 */
+    private String getSchema() throws SQLException {
+        String schema = connection.getSchema();
+        if (schema != null && !schema.isEmpty()) return schema;
+        return connection.getMetaData().getUserName();
+    }
+
+    /** DB 식별자 저장 방식에 맞게 대·소문자 정규화 (Oracle=대문자, PostgreSQL=소문자) */
+    private String normalizeIdentifier(String name) throws SQLException {
+        DatabaseMetaData meta = connection.getMetaData();
+        if (meta.storesUpperCaseIdentifiers()) return name.toUpperCase();
+        if (meta.storesLowerCaseIdentifiers()) return name.toLowerCase();
+        return name;
     }
 
     @Override

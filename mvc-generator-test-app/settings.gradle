@@ -1,6 +1,6 @@
 pluginManagement {
     repositories {
-//        mavenLocal()
+        mavenLocal()
         gradlePluginPortal()
     }
     includeBuild("../mvc-generator-gradle-plugin")

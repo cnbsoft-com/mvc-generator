@@ -9,7 +9,6 @@ services:
     environment:
       - ORACLE_PASSWORD=oracle
       - ORACLE_DATABASE=GENERATORll
-      -
       - APP_USER=dino
       - APP_USER_PASSWORD=dino123
     volumes:

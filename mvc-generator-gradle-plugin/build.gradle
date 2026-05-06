@@ -34,7 +34,7 @@ dependencies {
 gradlePlugin {
     plugins {
         mvcGenerator {
-            id = 'com.cnbsoft.mvc-generator'
+            id = 'com.cnbsoft.plugin.mvc-generator'
             implementationClass = 'com.cnbsoft.generator.plugin.MvcGeneratorPlugin'
             displayName = 'MVC Code Generator'
             description = 'Generates Spring MVC + MyBatis scaffolding from database table metadata'
