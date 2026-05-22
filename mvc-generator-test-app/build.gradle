@@ -66,6 +66,7 @@ mvcGenerator {
     serviceSuffix     = 'Svc'         // 기본값: "Service" → CodeSvc.java
     serviceImplSuffix = 'SvcImpl'     // 기본값: "ServiceImpl" → CodeSvcImpl.java
     mapperSuffix      = '00Mapper'         // 기본값: "Mapper" → CodeDao.java
+    useDddPattern     = false              // DDD 패턴 사용 여부 (기본값: false)
 
 
     // ── 커스텀 템플릿 오버라이드 (선택) ───────────────────────────

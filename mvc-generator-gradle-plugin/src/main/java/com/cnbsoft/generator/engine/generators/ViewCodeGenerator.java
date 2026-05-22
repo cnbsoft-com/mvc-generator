@@ -41,6 +41,7 @@ public class ViewCodeGenerator {
         model.put("servicePath", config.servicePath);
         model.put("persistencePath", config.persistencePath);
         model.put("implPath", config.implPath);
+        model.put("useDddPattern", config.useDddPattern);
 
         String templateName = resolveTemplateName(type);
         File outFile = PathResolver.viewFile(config, tableName, templateName);

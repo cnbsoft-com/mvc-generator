@@ -102,6 +102,7 @@ public class ColumnInspector implements Closeable {
 
         List<ColumnInfo> columnList = new ArrayList<>();
         List<PrimaryInfo> primaryInfos = getPrimaryInfo(normalizedName);
+        Map<String, String> commentMap = getColumnComments(normalizedName);
 
         for (int i = 1; i <= cnt; i++) {
             try {
@@ -126,6 +127,7 @@ public class ColumnInspector implements Closeable {
                 column.setSearchable(meta.isSearchable(i));
                 column.setSigned(meta.isSigned(i));
                 column.setWritable(meta.isWritable(i));
+                column.setComment(commentMap.getOrDefault(columnName.toUpperCase(), null));
                 columnList.add(column);
             } catch (SQLException e) {
                 // 일부 컬럼 오류는 무시하고 계속
@@ -184,6 +186,93 @@ public class ColumnInspector implements Closeable {
     // JDBC 타입 코드 기준으로 DBMS 종속 클래스명을 표준 Java 타입으로 정규화
     // (예: oracle.sql.TIMESTAMP → java.sql.Timestamp)
     // ────────────────────────────────────────────────────────────────
+    private Map<String, String> getColumnComments(String tableName) {
+        Map<String, String> comments = new HashMap<>();
+        try {
+            String dbProduct = connection.getMetaData().getDatabaseProductName().toLowerCase();
+            if (dbProduct.contains("oracle")) {
+                comments.putAll(getOracleColumnComments(tableName));
+            } else if (dbProduct.contains("mysql")) {
+                comments.putAll(getMysqlColumnComments(tableName));
+            } else if (dbProduct.contains("postgresql")) {
+                comments.putAll(getPostgresqlColumnComments(tableName));
+            }
+        } catch (SQLException e) {
+            log.fine("Failed to retrieve column comments: " + e.getMessage());
+        }
+        return comments;
+    }
+
+    private Map<String, String> getOracleColumnComments(String tableName) {
+        Map<String, String> comments = new HashMap<>();
+        try {
+            String query = "SELECT COLUMN_NAME, COMMENTS FROM USER_COL_COMMENTS WHERE TABLE_NAME = ?";
+            PreparedStatement pstmt = connection.prepareStatement(query);
+            pstmt.setString(1, tableName.toUpperCase());
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                String colName = rs.getString("COLUMN_NAME");
+                String comment = rs.getString("COMMENTS");
+                if (colName != null && comment != null) {
+                    comments.put(colName.toUpperCase(), comment);
+                }
+            }
+            rs.close();
+            pstmt.close();
+        } catch (SQLException e) {
+            log.fine("Failed to retrieve Oracle column comments: " + e.getMessage());
+        }
+        return comments;
+    }
+
+    private Map<String, String> getMysqlColumnComments(String tableName) {
+        Map<String, String> comments = new HashMap<>();
+        try {
+            String dbName = connection.getCatalog();
+            String query = "SELECT COLUMN_NAME, COLUMN_COMMENT FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ?";
+            PreparedStatement pstmt = connection.prepareStatement(query);
+            pstmt.setString(1, dbName);
+            pstmt.setString(2, tableName);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                String colName = rs.getString("COLUMN_NAME");
+                String comment = rs.getString("COLUMN_COMMENT");
+                if (colName != null && comment != null && !comment.isEmpty()) {
+                    comments.put(colName.toUpperCase(), comment);
+                }
+            }
+            rs.close();
+            pstmt.close();
+        } catch (SQLException e) {
+            log.fine("Failed to retrieve MySQL column comments: " + e.getMessage());
+        }
+        return comments;
+    }
+
+    private Map<String, String> getPostgresqlColumnComments(String tableName) {
+        Map<String, String> comments = new HashMap<>();
+        try {
+            String query = "SELECT a.attname, pg_catalog.col_description(a.attrelid, a.attnum) AS COMMENT " +
+                    "FROM pg_catalog.pg_attribute a " +
+                    "WHERE a.attrelid = ?::regclass AND a.attnum > 0 AND NOT a.attisdropped";
+            PreparedStatement pstmt = connection.prepareStatement(query);
+            pstmt.setString(1, tableName);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                String colName = rs.getString("attname");
+                String comment = rs.getString("COMMENT");
+                if (colName != null && comment != null) {
+                    comments.put(colName.toUpperCase(), comment);
+                }
+            }
+            rs.close();
+            pstmt.close();
+        } catch (SQLException e) {
+            log.fine("Failed to retrieve PostgreSQL column comments: " + e.getMessage());
+        }
+        return comments;
+    }
+
     private static String normalizeClassName(String rawClassName, int jdbcType, int scale) {
         return switch (jdbcType) {
             case Types.NUMERIC, Types.DECIMAL -> scale == 0 ? "java.lang.Long" : "java.lang.Double";

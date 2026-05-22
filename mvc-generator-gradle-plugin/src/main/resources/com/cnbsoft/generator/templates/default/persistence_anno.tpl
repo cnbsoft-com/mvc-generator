@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 import ${packagePath}.${modelPath}.<@toClass source=tableName />${modelSuffix};
+<@printImports columns />
 
 /**
  * <@toClass source=tableName />${mapperSuffix} - Annotation-based MyBatis Mapper
@@ -16,35 +17,38 @@ import ${packagePath}.${modelPath}.<@toClass source=tableName />${modelSuffix};
 public interface <@toClass source=tableName />${mapperSuffix} {
 
     @Select("""
-            SELECT <#list columns as col>${col.columnName?upper_case}<#if col_has_next>, </#if></#list>
-            FROM ${tableName?upper_case}
+            SELECT <#list columns as col>${col.columnName?upper_case}<#if col.comment??> /* ${col.comment} */</#if><#if col_has_next>,</#if>
+            </#list>FROM ${tableName?upper_case}
             WHERE <#assign pkFirst = true><#list columns as column><#if column.primaryKey == true><#if !pkFirst> AND </#if>${column.columnName?upper_case} = ${"#{"}<@toField source=column.columnName />}<#assign pkFirst = false></#if></#list>
             """)
-    <@toClass source=tableName />${modelSuffix} get(<@toClass source=tableName />${modelSuffix} <@toField source=tableName />);
+    <@toClass source=tableName />${modelSuffix} get();
 
     @Select("""
-            SELECT <#list columns as col>${col.columnName?upper_case}<#if col_has_next>, </#if></#list>
-            FROM ${tableName?upper_case}
+            SELECT <#list columns as col>${col.columnName?upper_case}<#if col.comment??> /* ${col.comment} */</#if><#if col_has_next>,</#if>
+            </#list>FROM ${tableName?upper_case}
             """)
     List${"<"}<@toClass source=tableName />${modelSuffix}${">"} getList(<@toClass source=tableName />${modelSuffix} <@toField source=tableName />);
 
     @Insert("""
             INSERT INTO ${tableName?upper_case}
-            (<#list columns as col>${col.columnName?upper_case}<#if col_has_next>, </#if></#list>)
-            VALUES (<#list columns as col>${"#{"}<@toField source=col.columnName />}<#if col_has_next>, </#if></#list>)
+            (<#list columns as col>${col.columnName?upper_case}<#if col_has_next>,</#if> <#if col.comment??> /* ${col.comment} */</#if>
+            </#list>)
+            VALUES (<#list columns as col>${"#{"}<@toField source=col.columnName />}<#if col_has_next>,</#if>
+            </#list>)
             """)
     int create(<@toClass source=tableName />${modelSuffix} <@toField source=tableName />);
 
     @Update("""
             UPDATE ${tableName?upper_case}
-            SET <#assign setFirst = true><#list columns as column><#if column.primaryKey == false><#if !setFirst>, </#if>${column.columnName?upper_case} = ${"#{"}<@toField source=column.columnName />}<#assign setFirst = false></#if></#list>
-            WHERE <#assign pkFirst = true><#list columns as column><#if column.primaryKey == true><#if !pkFirst> AND </#if>${column.columnName?upper_case} = ${"#{"}<@toField source=column.columnName />}<#assign pkFirst = false></#if></#list>
+            SET <#assign setFirst = true><#list columns as column><#if column.primaryKey == false><#if !setFirst>,</#if>
+            ${column.columnName?upper_case} = ${"#{"}<@toField source=column.columnName />} <#if column.comment??> /* ${column.comment} */</#if><#assign setFirst = false></#if></#list>
+            <#assign pkFirst = true>WHERE <#list columns as column><#if column.primaryKey == true><#if !pkFirst> AND </#if>${column.columnName?upper_case} = ${"#{"}<@toField source=column.columnName />}<#assign pkFirst = false></#if></#list>
             """)
     int update(<@toClass source=tableName />${modelSuffix} <@toField source=tableName />);
 
     @Delete("""
             DELETE FROM ${tableName?upper_case}
-            WHERE <#assign pkFirst = true><#list columns as column><#if column.primaryKey == true><#if !pkFirst> AND </#if>${column.columnName?upper_case} = ${"#{"}<@toField source=column.columnName />}<#assign pkFirst = false></#if></#list>
+            WHERE <#assign pkFirst = true><#list columns as column><#if column.primaryKey == true><#if !pkFirst> AND </#if>${column.columnName?upper_case}<#if column.comment??> /* ${column.comment} */</#if> = ${"#{"}<@toField source=column.columnName />}<#assign pkFirst = false></#if></#list>
             """)
     int delete(<@toClass source=tableName />${modelSuffix} <@toField source=tableName />);
 

@@ -93,6 +93,7 @@ public abstract class MvcGeneratorBaseTask extends DefaultTask {
                 .templateSet(ext.getTemplateSet().get())
                 .customTemplateDir(customTplDir)
                 .overwriteExisting(ext.getOverwriteExisting().get())
+                .useDddPattern(ext.getUseDddPattern().get())
                 .mapperType(ext.getMapperType().get())
                 .controllerType(ext.getControllerType().get())
                 .modelSuffix(ext.getModelSuffix().get())

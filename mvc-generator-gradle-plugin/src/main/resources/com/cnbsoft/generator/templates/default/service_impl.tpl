@@ -6,9 +6,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import ${packagePath}.${persistencePath}.<@toAllLow source=tableName />.<@toClass source=tableName />${mapperSuffix};
+import <@mapperPackage tableName />.<@toClass source=tableName />${mapperSuffix};
 import ${packagePath}.${modelPath}.<@toClass source=tableName />${modelSuffix};
-import ${packagePath}.${servicePath}.<@toAllLow source=tableName />.<@toClass source=tableName />${serviceSuffix};
+import <@servicePackage tableName />.<@toClass source=tableName />${serviceSuffix};
+<@printImports columns />
 
 @Service
 public class <@toClass source=tableName />${serviceImplSuffix} implements <@toClass source=tableName />${serviceSuffix} {
@@ -17,8 +18,8 @@ public class <@toClass source=tableName />${serviceImplSuffix} implements <@toCl
 	private <@toClass source=tableName />${mapperSuffix} <@toField source=tableName />${mapperSuffix?uncap_first};
 
 	@Override
-	public <@toClass source=tableName />${modelSuffix} get(<@toClass source=tableName />${modelSuffix} <@toField source=tableName />){
-		return <@toField source=tableName />${mapperSuffix?uncap_first}.get(<@toField source=tableName />);
+	public <@toClass source=tableName />${modelSuffix} get(){
+		return <@toField source=tableName />${mapperSuffix?uncap_first}.get();
 	}
 
 	@Override

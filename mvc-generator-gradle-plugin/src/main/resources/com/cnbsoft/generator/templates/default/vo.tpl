@@ -2,11 +2,15 @@
 package ${packagePath}.${modelPath};
 
 import org.apache.ibatis.type.Alias;
+<@printImports columns />
 
 @Alias("<@toClass source=tableName />")
 public class <@toClass source=tableName />${modelSuffix} {
 
 	<#list columns as column>
+	<#if column.comment??>
+    // ${column.comment}
+	</#if>
     private <@fieldType source=column.columnClassName /> <@toField source=column.columnName />;
 	</#list>
 

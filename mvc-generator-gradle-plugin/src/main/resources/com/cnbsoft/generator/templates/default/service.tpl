@@ -4,10 +4,11 @@ package ${packagePath}.${servicePath}.<@toAllLow source=tableName />;
 import java.util.List;
 
 import ${packagePath}.${modelPath}.<@toClass source=tableName />${modelSuffix};
+<@printImports columns />
 
 public interface <@toClass source=tableName />${serviceSuffix} {
 
-	<@toClass source=tableName />${modelSuffix} get(<@toClass source=tableName />${modelSuffix} <@toField source=tableName />);
+	<@toClass source=tableName />${modelSuffix} get();
 
 	List${"<"}<@toClass source=tableName />${modelSuffix}${">"} getList(<@toClass source=tableName />${modelSuffix} <@toField source=tableName />);
 

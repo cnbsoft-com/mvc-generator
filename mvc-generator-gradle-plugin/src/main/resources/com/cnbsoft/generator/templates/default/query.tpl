@@ -5,11 +5,13 @@
 <mapper namespace="${packagePath}.${persistencePath}.${modelName}.<@toClass source=tableName />${mapperSuffix}">
 	<resultMap id="<@toClass source=tableName />ResultMap" type="<@toClass source=tableName />">
 		<#list columns as column>
-		<result property="<@toField source=column.columnName />" column="${column.columnName?upper_case}" />
-		</#list>
+		<#if column.comment??><result property="<@toField source=column.columnName />" column="${column.columnName?upper_case}" /><!-- ${column.comment} -->
+		<#else><result property="<@toField source=column.columnName />" column="${column.columnName?upper_case}" />
+		</#if></#list>
 	</resultMap>
 	<sql id="baseColumnList">
-		<#list columns as column>${column.columnName?upper_case}<#if column_has_next>, </#if></#list>
+		<#list columns as column>${column.columnName?upper_case}<#if column.comment??> /* ${column.comment} */</#if><#if column_has_next>,
+		</#if></#list>
 	</sql>
 
 	<select id="get" parameterType="<@toClass source=tableName />" resultMap="<@toClass source=tableName />ResultMap">

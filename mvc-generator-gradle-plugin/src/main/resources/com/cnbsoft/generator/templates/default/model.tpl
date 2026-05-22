@@ -2,6 +2,7 @@
 package ${packagePath}.${modelPath};
 
 import org.apache.ibatis.type.Alias;
+<@printImports columns />
 
 <#assign capitalizedTableName="${tableName?replace('_', ' ')?capitalize?replace(' ','')}">
 
@@ -9,6 +10,9 @@ import org.apache.ibatis.type.Alias;
 public class <@toClass source=tableName /> {
 
 	<#list columns as column>
+	<#if column.comment??>
+    // ${column.comment}
+	</#if>
     private <@fieldType source=column.columnClassName /> <@toField source=column.columnName />;
 	</#list>
 	

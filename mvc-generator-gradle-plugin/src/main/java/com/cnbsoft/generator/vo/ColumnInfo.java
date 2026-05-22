@@ -26,6 +26,7 @@ public class ColumnInfo implements Serializable {
     private boolean signed;
     private boolean writable;
     private Integer nullable;
+    private String comment;
 
     public String getCatalogName() { return catalogName; }
     public void setCatalogName(String catalogName) { this.catalogName = catalogName; }
@@ -86,4 +87,7 @@ public class ColumnInfo implements Serializable {
 
     public Integer getNullable() { return nullable; }
     public void setNullable(Integer nullable) { this.nullable = nullable; }
+
+    public String getComment() { return comment; }
+    public void setComment(String comment) { this.comment = comment; }
 }
