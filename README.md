@@ -156,6 +156,11 @@ mvcGenerator {
     // [선택] 기존 파일 덮어쓰기 여부 (기본값: false)
     overwriteExisting = false
 
+    // [선택] DDD(Domain-Driven Design) 패턴 적용 (기본값: false)
+    // true: 도메인별 폴더 구조 (com.example.app.${domain}/model, controller, service, mapper)
+    // false: 계층별 폴더 구조 (com.example.app/vo, controller, service, mapper)
+    useDddPattern = false
+
     // [선택] 커스텀 템플릿 디렉터리 (기본 템플릿 오버라이드)
     // customTemplateDir = file("src/main/mvcgen/templates")
 }
@@ -220,6 +225,8 @@ CLI에서 테이블 패턴을 입력하고 생성할 컴포넌트를 대화형�
 
 `USER` 테이블에 대해 `basePackage = 'com.example.myapp'` 기본 설정으로 생성 시:
 
+### 계층별 구조 (useDddPattern = false, 기본값)
+
 | 파일 | 경로 | 설명 |
 |------|------|------|
 | `UserVo.java` | `com/example/myapp/vo/` | MyBatis `@Alias` POJO |
@@ -228,6 +235,20 @@ CLI에서 테이블 패턴을 입력하고 생성할 컴포넌트를 대화형�
 | `UserServiceImpl.java` | `com/example/myapp/service/user/impl/` | Service 구현체 |
 | `UserMapper.java` | `com/example/myapp/mapper/user/` | MyBatis Mapper Interface |
 | `mapper-User.xml` | `resources/mapper/` | MyBatis 쿼리 XML (`xml` 모드) |
+| `user_form.tpl` | `webapp/WEB-INF/views/user/` | 입력 폼 뷰 |
+| `user_get.tpl` | `webapp/WEB-INF/views/user/` | 상세 뷰 |
+| `user_list.tpl` | `webapp/WEB-INF/views/user/` | 목록 뷰 |
+
+### 도메인별 구조 (useDddPattern = true, DDD 패턴)
+
+| 파일 | 경로 | 설명 |
+|------|------|------|
+| `UserVo.java` | `com/example/myapp/user/model/` | MyBatis `@Alias` POJO |
+| `UserController.java` | `com/example/myapp/user/controller/` | Spring Controller |
+| `UserService.java` | `com/example/myapp/user/service/` | Service Interface |
+| `UserServiceImpl.java` | `com/example/myapp/user/service/impl/` | Service 구현체 |
+| `UserMapper.java` | `com/example/myapp/user/mapper/` | MyBatis Mapper Interface |
+| `mapper-User.xml` | `resources/mapper/user/` | MyBatis 쿼리 XML (`xml` 모드) |
 | `user_form.tpl` | `webapp/WEB-INF/views/user/` | 입력 폼 뷰 |
 | `user_get.tpl` | `webapp/WEB-INF/views/user/` | 상세 뷰 |
 | `user_list.tpl` | `webapp/WEB-INF/views/user/` | 목록 뷰 |

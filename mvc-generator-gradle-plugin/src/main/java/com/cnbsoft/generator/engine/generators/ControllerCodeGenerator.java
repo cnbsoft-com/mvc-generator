@@ -34,7 +34,7 @@ public class ControllerCodeGenerator {
         model.put("columns", columns);
         model.put("primaryColumns", primaryInfos);
         model.put("modelName", StringUtil.tableNameToJavaName(tableName).toLowerCase());
-        model.put("packagePath", config.basePackage);
+        model.put("packagePath", config.basePackage.concat(config.useDddPattern?".".concat(StringUtil.tableNameToJavaName(tableName).toLowerCase()):"") );
         model.put("modelPath", config.modelPath);
         model.put("controllerPath", config.controllerPath);
         model.put("servicePath", config.servicePath);
@@ -46,6 +46,7 @@ public class ControllerCodeGenerator {
         model.put("serviceSuffix", config.serviceSuffix);
         model.put("serviceImplSuffix", config.serviceImplSuffix);
         model.put("mapperSuffix", config.mapperSuffix);
+        model.put("useDddPattern", config.useDddPattern);
 
         File outFile = PathResolver.controllerFile(config, tableName);
         engine.generateFile(outFile, config.tplController, model);

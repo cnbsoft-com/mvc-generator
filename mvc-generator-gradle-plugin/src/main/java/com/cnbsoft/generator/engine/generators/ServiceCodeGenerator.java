@@ -58,6 +58,7 @@ public class ServiceCodeGenerator {
         model.put("serviceSuffix", config.serviceSuffix);
         model.put("serviceImplSuffix", config.serviceImplSuffix);
         model.put("mapperSuffix", config.mapperSuffix);
+        model.put("useDddPattern", config.useDddPattern);
         return model;
     }
 }

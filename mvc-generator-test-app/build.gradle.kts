@@ -1,0 +1,78 @@
+buildscript {
+    extra.apply {
+        set("springBootVersion", "6.2.17")
+    }
+}
+
+plugins {
+    java
+    id("com.cnbsoft.plugin.mvc-generator") version "1.0.0"
+    id("io.spring.dependency-management") version "1.1.7"
+}
+
+group = "com.cnbsoft.sample"
+version = "0.0.1-SNAPSHOT"
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+// ────────────────────────────────────────────────────────────────
+// MVC 코드 생성기 설정
+// ────────────────────────────────────────────────────────────────
+configure<com.cnbsoft.generator.plugin.MvcGeneratorExtension> {
+    // ── DB 접속 정보 ─────────────────────────────────────────────
+    dbDriver = "oracle.jdbc.driver.OracleDriver"
+    dbUrl = "jdbc:oracle:thin:@localhost:1521/xe"
+    dbUsername = "dino"
+    // dbPassword 는 환경변수나 gradle.properties 에서 주입 권장
+    dbPassword = project.findProperty("dbPassword")?.toString() ?: "dino123"
+
+    // ── 패키지 ──────────────────────────────────────────────────
+    basePackage = "com.cnbsoft.generator.test"
+
+    // ── 출력 경로 ────────────────────────────────────────────────
+    outputDir = file("${projectDir}/src/generated")
+    resourceOutputDir = file("${projectDir}/src/generated/resources")
+    viewOutputDir = file("${projectDir}/src/generated/webapp")
+
+    // ── 기존 파일 덮어쓰기 여부 (기본: false) ─────────────────────
+    overwriteExisting = true
+    mapperType = "annotation" // 'xml(기본값) 또는 annotation'
+    controllerType = "api"   // 'web'(기본값) 또는 'api'
+    modelSuffix = "Dto"         // 기본값: "" → CodeDto.java
+    controllerSuffix = "Resource"    // 기본값: "Controller" → CodeResource.java
+    serviceSuffix = "Svc"         // 기본값: "Service" → CodeSvc.java
+    serviceImplSuffix = "SvcImpl"     // 기본값: "ServiceImpl" → CodeSvcImpl.java
+    mapperSuffix = "00Mapper"         // 기본값: "Mapper" → CodeDao.java
+    useDddPattern = false              // DDD 패턴 사용 여부 (기본값: false)
+}
+
+dependencyManagement {
+    imports {
+        mavenBom("org.springframework.boot:spring-boot-dependencies:4.0.5")
+    }
+}
+
+// ── JDBC 드라이버 등록 ──────────────────────────────────────
+dependencies {
+    "mvcGeneratorJdbc"("com.oracle.database.jdbc:ojdbc11:23.6.0.24.10")
+    implementation("org.mybatis:mybatis:3.5.16")
+    implementation("org.springframework:spring-context")
+    implementation("org.springframework:spring-webmvc")
+    implementation("org.mybatis.spring.boot:mybatis-spring-boot-starter:4.0.1")
+}
+
+sourceSets {
+    main {
+        java {
+            setSrcDirs(listOf("src/main/java"))
+        }
+    }
+    create("generated") {
+        java {
+            setSrcDirs(listOf("src/generated/java"))
+        }
+    }
+}
