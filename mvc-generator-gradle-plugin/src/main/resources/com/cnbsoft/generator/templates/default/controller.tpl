@@ -11,9 +11,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 </#if>
 
-import <@servicePackage tableName />.<@toClass source=tableName />${serviceSuffix};
+import ${packagePath}.${servicePath}.<@toAllLow source=tableName />.<@toClass source=tableName />${serviceSuffix};
 import ${packagePath}.${modelPath}.<@toClass source=tableName />${modelSuffix};
-<@printImports columns />
 
 <#if controllerType == "api">
 @RestController
@@ -28,27 +27,27 @@ public class <@toClass source=tableName />${controllerSuffix} {
 	private <@toClass source=tableName />${serviceSuffix} <@toField source=tableName />${serviceSuffix?uncap_first};
 
 <#if controllerType == "api">
-	@GetMapping("/{id}")
-	public <@toClass source=tableName />${modelSuffix} get(@PathVariable String id) {
-		return <@toField source=tableName />${serviceSuffix?uncap_first}.get();
+	@GetMapping("/get")
+	public <@toClass source=tableName />${modelSuffix} get(@ModelAttribute <@toClass source=tableName />${modelSuffix} <@toField source=tableName />) {
+		return <@toField source=tableName />${serviceSuffix?uncap_first}.get(<@toField source=tableName />);
 	}
 
-	@GetMapping
-	public List${"<"}<@toClass source=tableName />${modelSuffix}${">"} list(@ModelAttribute <@toClass source=tableName />${modelSuffix} <@toField source=tableName />) {
+	@GetMapping("/list")
+	public List${"<"}<@toClass source=tableName />${modelSuffix}${">"} getList(@ModelAttribute <@toClass source=tableName />${modelSuffix} <@toField source=tableName />) {
 		return <@toField source=tableName />${serviceSuffix?uncap_first}.getList(<@toField source=tableName />);
 	}
 
-	@PostMapping
+	@PostMapping("/create")
 	public int create(@RequestBody <@toClass source=tableName />${modelSuffix} <@toField source=tableName />) {
 		return <@toField source=tableName />${serviceSuffix?uncap_first}.create(<@toField source=tableName />);
 	}
 
-	@PutMapping
+	@PutMapping("/update")
 	public int update(@RequestBody <@toClass source=tableName />${modelSuffix} <@toField source=tableName />) {
 		return <@toField source=tableName />${serviceSuffix?uncap_first}.update(<@toField source=tableName />);
 	}
 
-	@DeleteMapping
+	@DeleteMapping("/delete")
 	public int delete(@ModelAttribute <@toClass source=tableName />${modelSuffix} <@toField source=tableName />) {
 		return <@toField source=tableName />${serviceSuffix?uncap_first}.delete(<@toField source=tableName />);
 	}

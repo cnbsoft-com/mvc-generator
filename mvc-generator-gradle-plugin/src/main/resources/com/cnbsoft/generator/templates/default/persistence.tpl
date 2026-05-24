@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 import ${packagePath}.${modelPath}.<@toClass source=tableName />${modelSuffix};
-<@printImports columns />
 
 /**
  * <@toClass source=tableName />${mapperSuffix} interface
