@@ -66,7 +66,7 @@ public class PluginApplyTest {
         File buildFile = testProjectDir.newFile("build.gradle");
         write(buildFile,
                 """
-                        plugins { id 'com.cnbsoft.mvc-generator' }
+                        plugins { id 'com.cnbsoft.plugin.mvc-generator' }
                         mvcGenerator {
                             dbDriver   = 'com.mysql.cj.jdbc.Driver'
                             dbUrl      = 'jdbc:mysql://localhost:3306/test'
