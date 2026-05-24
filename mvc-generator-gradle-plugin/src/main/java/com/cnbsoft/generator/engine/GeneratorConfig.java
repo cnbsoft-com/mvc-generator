@@ -76,6 +76,16 @@ public class GeneratorConfig {
     public final String tplList          = "list";
     public final String tplExtension     = "tpl";
 
+    /** useDddPattern 옵션에 따라 테이블별 베이스 패키지를 반환한다. */
+    public String getBasePackageForTable(String tableName) {
+        if (useDddPattern) {
+            String domain = com.cnbsoft.generator.util.StringUtil.tableNameToJavaName(tableName).toLowerCase();
+            return basePackage + "." + domain;
+        } else {
+            return basePackage;
+        }
+    }
+
     private GeneratorConfig(Builder b) {
         this.dbDriver           = b.dbDriver;
         this.dbUrl              = b.dbUrl;

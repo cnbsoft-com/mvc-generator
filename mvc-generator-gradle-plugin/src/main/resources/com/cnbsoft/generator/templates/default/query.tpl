@@ -2,8 +2,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD ${mapperSuffix} 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="${packagePath}.${persistencePath}.${modelName}.<@toClass source=tableName />${mapperSuffix}">
-	<resultMap id="<@toClass source=tableName />ResultMap" type="<@toClass source=tableName />">
+<mapper namespace="${packagePath}.<@domainPackage subPath=persistencePath tableName=tableName useDdd=useDddPattern />.<@toClass source=tableName />${mapperSuffix}">
+	<resultMap id="<@toClass source=tableName />ResultMap" type="${packagePath}.${modelPath}.<@toClass source=tableName />${modelSuffix}">
 		<#list columns as column>
 		<result property="<@toField source=column.columnName />" column="${column.columnName?upper_case}" />
 		</#list>

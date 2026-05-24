@@ -48,7 +48,7 @@ public class ServiceCodeGenerator {
         model.put("columns", columns);
         model.put("primaryColumns", primaryInfos);
         model.put("modelName", StringUtil.tableNameToJavaName(tableName).toLowerCase());
-        model.put("packagePath", config.basePackage);
+        model.put("packagePath", config.getBasePackageForTable(tableName));
         model.put("modelPath", config.modelPath);
         model.put("servicePath", config.servicePath);
         model.put("persistencePath", config.persistencePath);

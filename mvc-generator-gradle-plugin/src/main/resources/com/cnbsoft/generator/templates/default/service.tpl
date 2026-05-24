@@ -1,5 +1,5 @@
 <#include "common.tpl">
-package ${packagePath}.${servicePath}.<@toAllLow source=tableName />;
+package ${packagePath}.<@domainPackage subPath=servicePath tableName=tableName useDdd=useDddPattern />;
 
 import java.util.List;
 

@@ -1,14 +1,14 @@
 <#include "common.tpl">
-package ${packagePath}.${servicePath}.<@toAllLow source=tableName />.${implPath};
+package ${packagePath}.<@domainPackage subPath=servicePath tableName=tableName useDdd=useDddPattern />.${implPath};
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import ${packagePath}.${persistencePath}.<@toAllLow source=tableName />.<@toClass source=tableName />${mapperSuffix};
+import ${packagePath}.<@domainPackage subPath=persistencePath tableName=tableName useDdd=useDddPattern />.<@toClass source=tableName />${mapperSuffix};
 import ${packagePath}.${modelPath}.<@toClass source=tableName />${modelSuffix};
-import ${packagePath}.${servicePath}.<@toAllLow source=tableName />.<@toClass source=tableName />${serviceSuffix};
+import ${packagePath}.<@domainPackage subPath=servicePath tableName=tableName useDdd=useDddPattern />.<@toClass source=tableName />${serviceSuffix};
 
 @Service
 public class <@toClass source=tableName />${serviceImplSuffix} implements <@toClass source=tableName />${serviceSuffix} {

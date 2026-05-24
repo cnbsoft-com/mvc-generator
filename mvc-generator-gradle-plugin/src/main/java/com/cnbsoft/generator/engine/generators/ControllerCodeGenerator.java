@@ -34,7 +34,7 @@ public class ControllerCodeGenerator {
         model.put("columns", columns);
         model.put("primaryColumns", primaryInfos);
         model.put("modelName", StringUtil.tableNameToJavaName(tableName).toLowerCase());
-        model.put("packagePath", config.basePackage.concat(config.useDddPattern?".".concat(StringUtil.tableNameToJavaName(tableName).toLowerCase()):"") );
+        model.put("packagePath", config.getBasePackageForTable(tableName));
         model.put("modelPath", config.modelPath);
         model.put("controllerPath", config.controllerPath);
         model.put("servicePath", config.servicePath);

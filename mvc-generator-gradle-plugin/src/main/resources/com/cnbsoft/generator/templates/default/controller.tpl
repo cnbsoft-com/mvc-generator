@@ -11,7 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 </#if>
 
-import ${packagePath}.${servicePath}.<@toAllLow source=tableName />.<@toClass source=tableName />${serviceSuffix};
+import <@servicePackage tableName />.<@toClass source=tableName />${serviceSuffix};
 import ${packagePath}.${modelPath}.<@toClass source=tableName />${modelSuffix};
 
 <#if controllerType == "api">

@@ -1,5 +1,5 @@
 <#include "common.tpl">
-package ${packagePath}.${persistencePath}.<@toAllLow source=tableName />;
+package ${packagePath}.<@domainPackage subPath=persistencePath tableName=tableName useDdd=useDddPattern />;
 
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
