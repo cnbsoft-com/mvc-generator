@@ -29,6 +29,9 @@ configure<com.cnbsoft.generator.plugin.MvcGeneratorExtension> {
     // dbPassword 는 환경변수나 gradle.properties 에서 주입 권장
     dbPassword = project.findProperty("dbPassword")?.toString() ?: "dino123"
 
+    // ── 생성 대상 테이블 ─────────────────────────────────────────
+    tableNames = listOf("CODE")
+
     // ── 패키지 ──────────────────────────────────────────────────
     basePackage = "com.cnbsoft.generator.test"
 
