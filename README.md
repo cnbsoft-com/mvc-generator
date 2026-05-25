@@ -140,11 +140,14 @@ mvcGenerator {
     mapperType     = 'xml'        // 'xml'(쿼리 XML, 기본값) | 'annotation'(어노테이션 + text block)
 
     // [선택] 클래스명 접미사 커스터마이징 (기본값)
-    modelSuffix       = ''              // 기본값: ""          → UserVo.java
-    controllerSuffix  = 'Controller'    // 기본값: "Controller" → UserController.java
-    serviceSuffix     = 'Service'       // 기본값: "Service"    → UserService.java
-    serviceImplSuffix = 'ServiceImpl'   // 기본값: "ServiceImpl"→ UserServiceImpl.java
-    mapperSuffix      = 'Mapper'        // 기본값: "Mapper"     → UserMapper.java
+    modelSuffix       = 'Dto'         // 기본값: ""          → UserDto.java
+    controllerSuffix  = 'Resource'    // 기본값: "Controller" → UserResource.java
+    serviceSuffix     = 'Svc'         // 기본값: "Service"    → UserSvc.java
+    serviceImplSuffix = 'SvcImpl'     // 기본값: "ServiceImpl"→ UserSvcImpl.java
+    mapperSuffix      = '00Mapper'    // 기본값: "Mapper"     → User00Mapper.java
+
+    // [선택] VO에 빌더 패턴 적용 여부 (기본값: false)
+    useBuilderPattern = true 
 
     // [선택] 뷰 및 쿼리 파일 설정
     viewPath      = 'WEB-INF/views'
