@@ -1,0 +1,62 @@
+flowchart LR
+    classDef actor  fill:#dbeafe,stroke:#3b82f6,color:#1e3a8a,rx:8
+    classDef uc     fill:#f0fdf4,stroke:#22c55e,color:#14532d
+    classDef sys    fill:#fafafa,stroke:#94a3b8
+    classDef note   fill:#fef9c3,stroke:#ca8a04,color:#713f12
+
+    Dev([👤 Developer]):::actor
+    Gradle([⚙️ Gradle Build]):::actor
+
+    subgraph SYS["🔧 MVC Generator Plugin"]
+        direction TB
+
+        subgraph AUTO["자동 태스크 (build.gradle 설정)"]
+            UC_ALL(("generateMvc\n전체 생성")):::uc
+            UC_MODEL(("generateMvcModel\nVO 클래스 생성")):::uc
+            UC_CTRL(("generateMvcController\nController 생성")):::uc
+            UC_SVC(("generateMvcService\nService 생성")):::uc
+            UC_PERSIST(("generateMvcPersistence\nMapper 생성")):::uc
+            UC_QUERY(("generateMvcQuery\nXML 쿼리 생성")):::uc
+            UC_VIEW(("generateMvcView\nView 템플릿 생성")):::uc
+
+            UC_ALL -->|<<include>>| UC_MODEL
+            UC_ALL -->|<<include>>| UC_CTRL
+            UC_ALL -->|<<include>>| UC_SVC
+            UC_ALL -->|<<include>>| UC_PERSIST
+            UC_ALL -->|<<include>>| UC_QUERY
+            UC_ALL -->|<<include>>| UC_VIEW
+        end
+
+        subgraph INTER["대화형 태스크 (./gradlew generate)"]
+            UC_GEN(("generate\n대화형 실행")):::uc
+            UC_SEARCH(("테이블 패턴\n검색")):::uc
+            UC_CONFIRM(("테이블\n확인/선택")):::uc
+            UC_PICK(("생성 종류\n선택")):::uc
+            UC_RUN(("코드\n생성 실행")):::uc
+
+            UC_GEN -->|<<include>>| UC_SEARCH
+            UC_GEN -->|<<include>>| UC_CONFIRM
+            UC_GEN -->|<<include>>| UC_PICK
+            UC_GEN -->|<<include>>| UC_RUN
+            UC_SEARCH -->|<<extend>>| UC_CONFIRM
+        end
+
+        subgraph CFG["DSL 설정 (mvcGenerator {})"]
+            UC_DSL(("DSL 설정\nmvcGenerator {}")):::uc
+            UC_DB(("DB 접속\n정보 설정")):::uc
+            UC_TPL(("템플릿\n커스터마이징")):::uc
+            UC_DDD(("DDD 패턴\n활성화")):::uc
+            UC_MAPPER(("Mapper 유형\n선택 xml/anno")):::uc
+
+            UC_DSL -->|<<include>>| UC_DB
+            UC_DSL -.->|<<extend>>| UC_TPL
+            UC_DSL -.->|<<extend>>| UC_DDD
+            UC_DSL -.->|<<extend>>| UC_MAPPER
+        end
+    end
+
+    Dev --- UC_GEN
+    Dev --- UC_DSL
+    Dev --- UC_ALL
+    Gradle --- UC_ALL
+    Gradle --- UC_MODEL

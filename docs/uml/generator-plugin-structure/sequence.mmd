@@ -1,0 +1,49 @@
+sequenceDiagram
+    autonumber
+    actor Dev as Developer
+    participant Gradle
+    participant Plugin as MvcGeneratorPlugin
+    participant Ext as MvcGeneratorExtension
+    participant Task as MvcGeneratorBaseTask
+    participant Inspector as ColumnInspector
+    participant Engine as TemplateEngine
+    participant Generator as XxxCodeGenerator
+    participant PathResolver
+    participant DB as Database
+
+    Dev->>Gradle: ./gradlew generateMvcModel (or generateMvc)
+    Gradle->>Plugin: apply(project)
+    Plugin->>Ext: project.extensions.create("mvcGenerator")
+    Plugin->>Gradle: register tasks (generateMvcModel, generateMvc, ...)
+    Plugin->>Gradle: register JDBC Configuration
+
+    Gradle->>Task: execute()
+    Task->>Ext: getGeneratorExtension().get()
+    Task->>Task: buildConfig(ext) → GeneratorConfig
+    Task->>Task: buildJdbcClassLoader() → URLClassLoader
+    Task->>Inspector: new ColumnInspector(config, jdbcLoader)
+    Inspector->>DB: DriverManager.getConnection(url, props)
+    DB-->>Inspector: Connection
+
+    Task->>Engine: new TemplateEngine(config)
+    Note over Engine: FreeMarker 설정<br/>(커스텀 → 내장 fallback)
+
+    loop 각 테이블 (config.tableNames)
+        Task->>Task: executeForTable(tableName, config, inspector, engine)
+        Task->>Generator: new XxxCodeGenerator(config, inspector, engine)
+        Generator->>Inspector: getColumnInfos(tableName)
+        Inspector->>DB: SELECT * FROM tableName WHERE 1=1
+        DB-->>Inspector: ResultSetMetaData
+        Inspector->>DB: getPrimaryKeys (via DatabaseMetaData)
+        DB-->>Inspector: PrimaryKey ResultSet
+        Inspector-->>Generator: List~ColumnInfo~, List~PrimaryInfo~
+        Generator->>Generator: build FreeMarker model Map
+        Generator->>PathResolver: xxxFile(config, tableName) → File
+        Generator->>Engine: generateFile(targetFile, templateName, model)
+        Engine->>Engine: freemarkerConfig.getTemplate(name.tpl)
+        Engine->>Engine: template.process(model, writer)
+        Engine-->>Dev: GENERATED: /path/to/file
+    end
+
+    Task->>Inspector: close()
+    Inspector->>DB: connection.close()

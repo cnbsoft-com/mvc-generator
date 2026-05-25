@@ -1,0 +1,119 @@
+classDiagram
+    direction TB
+
+    namespace Plugin {
+        class MvcGeneratorPlugin {
+            +apply(project: Project)
+        }
+        class MvcGeneratorExtension {
+            -dbDriver: Property~String~
+            -dbUrl: Property~String~
+            -tableNames: ListProperty~String~
+            -outputDir: DirectoryProperty
+            -basePackage: Property~String~
+            -templateSet: Property~String~
+            -useDddPattern: Property~Boolean~
+            -mapperType: Property~String~
+            -controllerType: Property~String~
+        }
+    }
+
+    namespace Tasks {
+        class MvcGeneratorBaseTask {
+            <<abstract>>
+            +execute()
+            #executeForTable(tableName, config, inspector, engine)*
+            -buildConfig(ext): GeneratorConfig
+            -buildJdbcClassLoader(): ClassLoader
+        }
+        class ConcreteTask {
+            <<GenerateModel·Controller·Service>>
+            <<Persistence·Query·Form·Get·List>>
+            #executeForTable()
+        }
+        class GenerateMvcInteractiveTask {
+            +execute()
+            -runGenerators(tableName, ...)
+        }
+    }
+
+    namespace Engine {
+        class GeneratorConfig {
+            +dbDriver: String
+            +tableNames: List~String~
+            +basePackage: String
+            +useDddPattern: boolean
+            +mapperType: String
+            +controllerType: String
+            +getBasePackageForTable(tableName): String
+        }
+        class ColumnInspector {
+            -connection: Connection
+            -columnCache: Map
+            +getColumnInfos(tableName): List~ColumnInfo~
+            +getPrimaryInfo(tableName): List~PrimaryInfo~
+            +listTablesLike(pattern): List~String~
+            +close()
+        }
+        class TemplateEngine {
+            -freemarkerConfig: Configuration
+            +generateFile(targetFile, templateName, model)
+        }
+        class PathResolver {
+            +modelFile(config, tableName): File
+            +controllerFile(config, tableName): File
+            +serviceFile(config, tableName): File
+        }
+    }
+
+    namespace Generators {
+        class CodeGenerator {
+            <<Model·Controller·Service>>
+            <<Persistence·PersistenceAnno·View·Query>>
+            +generate(tableName)
+        }
+    }
+
+    namespace Interactive {
+        class TableSelector {
+            +promptForPatterns(): List~String~
+            +confirmTables(candidates): List~String~
+            +selectGenerationTypes(): Set~GenerationType~
+        }
+    }
+
+    namespace VO {
+        class ColumnInfo {
+            +columnName: String
+            +columnClassName: String
+            +primaryKey: boolean
+        }
+        class PrimaryInfo {
+            +columnName: String
+            +tableName: String
+        }
+    }
+
+    MvcGeneratorPlugin --> MvcGeneratorExtension : creates DSL
+    MvcGeneratorPlugin --> MvcGeneratorBaseTask : registers
+    MvcGeneratorPlugin --> GenerateMvcInteractiveTask : registers
+
+    MvcGeneratorBaseTask <|-- ConcreteTask
+
+    MvcGeneratorBaseTask --> GeneratorConfig : builds
+    MvcGeneratorBaseTask --> ColumnInspector : creates
+    MvcGeneratorBaseTask --> TemplateEngine : creates
+
+    GenerateMvcInteractiveTask --> GeneratorConfig : builds
+    GenerateMvcInteractiveTask --> ColumnInspector : creates
+    GenerateMvcInteractiveTask --> TemplateEngine : creates
+    GenerateMvcInteractiveTask --> TableSelector : uses
+
+    ConcreteTask --> CodeGenerator : delegates
+
+    CodeGenerator --> ColumnInspector : queries
+    CodeGenerator --> TemplateEngine : renders
+    CodeGenerator --> PathResolver : resolves path
+
+    ColumnInspector --> ColumnInfo : produces
+    ColumnInspector --> PrimaryInfo : produces

@@ -1,0 +1,53 @@
+sequenceDiagram
+    autonumber
+    actor Dev as Developer
+    participant Gradle
+    participant ITask as GenerateMvcInteractiveTask
+    participant Selector as TableSelector
+    participant Inspector as ColumnInspector
+    participant Engine as TemplateEngine
+    participant Generators as CodeGenerators
+    participant DB as Database
+
+    Dev->>Gradle: ./gradlew generate --no-daemon --console=plain
+    Gradle->>ITask: execute()
+    ITask->>Inspector: new ColumnInspector(probeConfig, jdbcLoader)
+    Inspector->>DB: connect (DB 연결)
+    DB-->>Inspector: Connection
+
+    loop 세션 반복
+        loop 테이블 검색 확인
+            ITask->>Selector: promptForPatterns()
+            Selector-->>Dev: "Enter table pattern (e.g. USER_%): "
+            Dev-->>Selector: USER_%
+            ITask->>Inspector: listTablesLike("USER_%")
+            Inspector->>DB: DatabaseMetaData.getTables(...)
+            DB-->>Inspector: TABLE_NAME ResultSet
+            Inspector-->>ITask: ["USER_ACCOUNT", "USER_ROLE"]
+            ITask->>Selector: confirmTables(candidates)
+            Selector-->>Dev: "[1] USER_ACCOUNT  [2] USER_ROLE  → confirm?"
+            Dev-->>Selector: 1,2 (확인)
+        end
+
+        ITask->>Selector: selectGenerationTypes()
+        Selector-->>Dev: "[1] ALL  [2] MODEL  [3] CONTROLLER ... → select:"
+        Dev-->>Selector: 1 (ALL)
+
+        ITask->>ITask: buildFinalConfig(ext, confirmedTables)
+        ITask->>Engine: new TemplateEngine(config)
+
+        loop 각 테이블
+            ITask->>Generators: runGenerators(tableName, ...)
+            Generators->>Inspector: getColumnInfos(tableName)
+            Inspector-->>Generators: List~ColumnInfo~
+            Generators->>Engine: generateFile(...)
+            Engine-->>Dev: GENERATED: /path/to/...
+        end
+
+        ITask->>Selector: promptContinue()
+        Selector-->>Dev: "Generate more? (y/n): "
+        Dev-->>Selector: n
+        Note over ITask: continueSession = false
+    end
+
+    ITask->>Inspector: close()
