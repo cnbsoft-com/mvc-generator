@@ -15,6 +15,7 @@ public class GeneratorConfig {
     public final String dbUrl;
     public final String dbUsername;
     public final String dbPassword;
+    public final String dbSchema;
 
     // ── 생성 대상 테이블 ─────────────────────────────────────────────
     public final List<String> tableNames;
@@ -91,6 +92,7 @@ public class GeneratorConfig {
         this.dbUrl              = b.dbUrl;
         this.dbUsername         = b.dbUsername;
         this.dbPassword         = b.dbPassword;
+        this.dbSchema           = b.dbSchema;
         this.tableNames         = b.tableNames;
         this.outputDir          = b.outputDir;
         this.resourceOutputDir  = b.resourceOutputDir;
@@ -127,6 +129,7 @@ public class GeneratorConfig {
         private String dbUrl;
         private String dbUsername;
         private String dbPassword;
+        private String dbSchema = "";
         private List<String> tableNames;
         private File outputDir;
         private File resourceOutputDir;
@@ -159,6 +162,7 @@ public class GeneratorConfig {
         public Builder dbUrl(String v)             { this.dbUrl = v; return this; }
         public Builder dbUsername(String v)        { this.dbUsername = v; return this; }
         public Builder dbPassword(String v)        { this.dbPassword = v; return this; }
+        public Builder dbSchema(String v)          { this.dbSchema = v; return this; }
         public Builder tableNames(List<String> v)  { this.tableNames = v; return this; }
         public Builder outputDir(File v)           { this.outputDir = v; return this; }
         public Builder resourceOutputDir(File v)   { this.resourceOutputDir = v; return this; }

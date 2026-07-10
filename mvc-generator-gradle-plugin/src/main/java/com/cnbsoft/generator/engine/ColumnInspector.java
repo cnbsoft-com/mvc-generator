@@ -26,6 +26,7 @@ public class ColumnInspector implements Closeable {
     private static final List<String> AVAILABLE_KEYS = Arrays.asList(COLUMN_NAME, TABLE_NAME);
 
     private final Connection connection;
+    private final String dbSchema;
     private final Map<String, List<ColumnInfo>> columnCache = new HashMap<>();
 
     /**
@@ -33,6 +34,8 @@ public class ColumnInspector implements Closeable {
      * @param jdbcLoader  JDBC 드라이버 클래스를 포함하는 격리된 ClassLoader
      */
     public ColumnInspector(GeneratorConfig config, ClassLoader jdbcLoader) throws Exception {
+        this.dbSchema = (config.dbSchema != null && !config.dbSchema.isBlank()) ? config.dbSchema : null;
+
         Class<?> driverClass = jdbcLoader.loadClass(config.dbDriver);
         Driver driver = (Driver) driverClass.getDeclaredConstructor().newInstance();
         // DriverShim: 격리된 ClassLoader 의 Driver를 DriverManager에 등록
@@ -95,8 +98,9 @@ public class ColumnInspector implements Closeable {
             return columnCache.get(normalizedName);
         }
 
+        String qualifiedName = dbSchema != null ? dbSchema + "." + normalizedName : normalizedName;
         Statement statement = connection.createStatement();
-        ResultSet rs = statement.executeQuery(String.format(COLUMN_QUERY, normalizedName));
+        ResultSet rs = statement.executeQuery(String.format(COLUMN_QUERY, qualifiedName));
         ResultSetMetaData meta = rs.getMetaData();
         int cnt = meta.getColumnCount();
 
@@ -156,8 +160,9 @@ public class ColumnInspector implements Closeable {
         return new ArrayList<>(seen);
     }
 
-    /** JDBC 4.1: connection.getSchema() → PostgreSQL은 "public", Oracle은 username 반환 */
+    /** dbSchema 가 명시되면 우선 사용, 아니면 JDBC 4.1: connection.getSchema() → PostgreSQL은 "public", Oracle은 username 반환 */
     private String getSchema() throws SQLException {
+        if (dbSchema != null) return dbSchema;
         String schema = connection.getSchema();
         if (schema != null && !schema.isEmpty()) return schema;
         return connection.getMetaData().getUserName();
@@ -206,9 +211,13 @@ public class ColumnInspector implements Closeable {
     private Map<String, String> getOracleColumnComments(String tableName) {
         Map<String, String> comments = new HashMap<>();
         try {
-            String query = "SELECT COLUMN_NAME, COMMENTS FROM USER_COL_COMMENTS WHERE TABLE_NAME = ?";
+            String query = dbSchema != null
+                    ? "SELECT COLUMN_NAME, COMMENTS FROM ALL_COL_COMMENTS WHERE OWNER = ? AND TABLE_NAME = ?"
+                    : "SELECT COLUMN_NAME, COMMENTS FROM USER_COL_COMMENTS WHERE TABLE_NAME = ?";
             PreparedStatement pstmt = connection.prepareStatement(query);
-            pstmt.setString(1, tableName.toUpperCase());
+            int idx = 1;
+            if (dbSchema != null) pstmt.setString(idx++, dbSchema.toUpperCase());
+            pstmt.setString(idx, tableName.toUpperCase());
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 String colName = rs.getString("COLUMN_NAME");
@@ -228,7 +237,7 @@ public class ColumnInspector implements Closeable {
     private Map<String, String> getMysqlColumnComments(String tableName) {
         Map<String, String> comments = new HashMap<>();
         try {
-            String dbName = connection.getCatalog();
+            String dbName = dbSchema != null ? dbSchema : connection.getCatalog();
             String query = "SELECT COLUMN_NAME, COLUMN_COMMENT FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ?";
             PreparedStatement pstmt = connection.prepareStatement(query);
             pstmt.setString(1, dbName);
@@ -256,7 +265,8 @@ public class ColumnInspector implements Closeable {
                     "FROM pg_catalog.pg_attribute a " +
                     "WHERE a.attrelid = ?::regclass AND a.attnum > 0 AND NOT a.attisdropped";
             PreparedStatement pstmt = connection.prepareStatement(query);
-            pstmt.setString(1, tableName);
+            String regclassName = dbSchema != null ? dbSchema + "." + tableName : tableName;
+            pstmt.setString(1, regclassName);
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 String colName = rs.getString("attname");

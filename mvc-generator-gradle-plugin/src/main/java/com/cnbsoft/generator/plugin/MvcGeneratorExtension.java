@@ -18,6 +18,7 @@ import javax.inject.Inject;
  *     dbUrl      = 'jdbc:mysql://localhost:3306/mydb'
  *     dbUsername = 'root'
  *     dbPassword = project.findProperty('dbPassword') ?: ''
+ *     dbSchema   = 'MY_SCHEMA' // 선택: 미지정 시 접속 계정 소유 스키마 사용
  *
  *     tableNames = ['USER_ACCOUNT', 'PRODUCT_ITEM']
  *     basePackage = 'kr.co.myapp.web'
@@ -35,6 +36,7 @@ public class MvcGeneratorExtension {
     private final Property<String> dbUrl;
     private final Property<String> dbUsername;
     private final Property<String> dbPassword;
+    private final Property<String> dbSchema;
 
     // ── 생성 대상 테이블 ─────────────────────────────────────────────
     private final ListProperty<String> tableNames;
@@ -93,6 +95,7 @@ public class MvcGeneratorExtension {
         dbUrl               = objects.property(String.class);
         dbUsername          = objects.property(String.class);
         dbPassword          = objects.property(String.class).convention("");
+        dbSchema            = objects.property(String.class).convention("");
         tableNames          = objects.listProperty(String.class);
         outputDir           = objects.directoryProperty();
         resourceOutputDir   = objects.directoryProperty();
@@ -126,6 +129,7 @@ public class MvcGeneratorExtension {
     public Property<String> getDbUrl()                 { return dbUrl; }
     public Property<String> getDbUsername()            { return dbUsername; }
     public Property<String> getDbPassword()            { return dbPassword; }
+    public Property<String> getDbSchema()               { return dbSchema; }
     public ListProperty<String> getTableNames()        { return tableNames; }
     public DirectoryProperty getOutputDir()            { return outputDir; }
     public DirectoryProperty getResourceOutputDir()    { return resourceOutputDir; }

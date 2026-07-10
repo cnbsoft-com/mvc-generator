@@ -74,6 +74,7 @@ public abstract class MvcGeneratorBaseTask extends DefaultTask {
                 .dbUrl(ext.getDbUrl().get())
                 .dbUsername(ext.getDbUsername().get())
                 .dbPassword(ext.getDbPassword().getOrElse(""))
+                .dbSchema(ext.getDbSchema().getOrElse(""))
                 .tableNames(ext.getTableNames().get())
                 .outputDir(outputDir)
                 .resourceOutputDir(resourceDir)

@@ -156,6 +156,7 @@ public abstract class GenerateMvcInteractiveTask extends DefaultTask {
                 .dbUrl(ext.getDbUrl().get())
                 .dbUsername(ext.getDbUsername().get())
                 .dbPassword(ext.getDbPassword().getOrElse(""))
+                .dbSchema(ext.getDbSchema().getOrElse(""))
                 .outputDir(outputDir)
                 .resourceOutputDir(resourceDir)
                 .viewOutputDir(viewDir)
