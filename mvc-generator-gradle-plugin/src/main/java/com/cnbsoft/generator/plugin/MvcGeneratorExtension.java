@@ -1,11 +1,13 @@
 package com.cnbsoft.generator.plugin;
 
+import com.cnbsoft.generator.engine.GeneratorConfig;
 import org.gradle.api.file.DirectoryProperty;
 import org.gradle.api.model.ObjectFactory;
 import org.gradle.api.provider.ListProperty;
 import org.gradle.api.provider.Property;
 
 import javax.inject.Inject;
+import java.io.File;
 
 /**
  * build.gradle 의 mvcGenerator { } 블록에서 사용할 수 있는 Gradle DSL 확장.
@@ -157,4 +159,48 @@ public class MvcGeneratorExtension {
     public Property<String>  getServiceSuffix()          { return serviceSuffix; }
     public Property<String>  getServiceImplSuffix()      { return serviceImplSuffix; }
     public Property<String>  getMapperSuffix()           { return mapperSuffix; }
+
+    /** 이 확장에 설정된 값들로 채운 {@link GeneratorConfig.Builder}. tableNames는 호출자가 채운다. */
+    public GeneratorConfig.Builder toConfigBuilder() {
+        File customTplDir = getCustomTemplateDir().isPresent()
+                ? getCustomTemplateDir().get().getAsFile() : null;
+        File outputDir = getOutputDir().get().getAsFile();
+        File resourceDir = getResourceOutputDir().isPresent()
+                ? getResourceOutputDir().get().getAsFile() : outputDir;
+        File viewDir = getViewOutputDir().isPresent()
+                ? getViewOutputDir().get().getAsFile() : outputDir;
+
+        return GeneratorConfig.builder()
+                .dbDriver(getDbDriver().get())
+                .dbUrl(getDbUrl().get())
+                .dbUsername(getDbUsername().get())
+                .dbPassword(getDbPassword().getOrElse(""))
+                .dbSchema(getDbSchema().getOrElse(""))
+                .outputDir(outputDir)
+                .resourceOutputDir(resourceDir)
+                .viewOutputDir(viewDir)
+                .basePackage(getBasePackage().get())
+                .modelPath(getModelSubPackage().get())
+                .controllerPath(getControllerSubPackage().get())
+                .servicePath(getServiceSubPackage().get())
+                .persistencePath(getPersistenceSubPackage().get())
+                .implPath(getImplSubPackage().get())
+                .webAppPath(getWebAppPath().get())
+                .viewPath(getViewPath().get())
+                .viewExtension(getViewExtension().get())
+                .queryPath(getQueryPath().get())
+                .queryPrefix(getQueryPrefix().get())
+                .queryExt(getQueryExt().get())
+                .templateSet(getTemplateSet().get())
+                .customTemplateDir(customTplDir)
+                .overwriteExisting(getOverwriteExisting().get())
+                .useDddPattern(getUseDddPattern().get())
+                .mapperType(getMapperType().get())
+                .controllerType(getControllerType().get())
+                .modelSuffix(getModelSuffix().get())
+                .controllerSuffix(getControllerSuffix().get())
+                .serviceSuffix(getServiceSuffix().get())
+                .serviceImplSuffix(getServiceImplSuffix().get())
+                .mapperSuffix(getMapperSuffix().get());
+    }
 }
