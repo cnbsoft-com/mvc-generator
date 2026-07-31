@@ -1,6 +1,7 @@
 plugins {
     id 'java-gradle-plugin'
     id 'maven-publish'
+    id 'com.gradle.plugin-publish' version '1.3.0'
 }
 
 group = 'com.cnbsoft.plugin'
@@ -32,12 +33,17 @@ dependencies {
 }
 
 gradlePlugin {
+    // TODO(Plugin Portal 게시 전 필수): GitHub 저장소 공개 후 실제 URL로 교체
+    website = 'TODO: set repository website URL before publishing'
+    vcsUrl  = 'TODO: set repository VCS URL before publishing'
+
     plugins {
         mvcGenerator {
             id = 'com.cnbsoft.plugin.mvc-generator'
             implementationClass = 'com.cnbsoft.generator.plugin.MvcGeneratorPlugin'
             displayName = 'MVC Code Generator'
             description = 'Generates Spring MVC + MyBatis scaffolding from database table metadata'
+            tags.set(['mybatis', 'spring-mvc', 'code-generator', 'scaffolding'])
         }
     }
 }

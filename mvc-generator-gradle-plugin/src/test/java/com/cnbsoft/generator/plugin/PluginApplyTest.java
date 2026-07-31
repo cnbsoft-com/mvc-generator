@@ -1,4 +1,4 @@
-package com.cnbsoft.plugin.generator;
+package com.cnbsoft.generator.plugin;
 
 import org.gradle.testkit.runner.BuildResult;
 import org.gradle.testkit.runner.GradleRunner;

@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.sql.*;
 import java.util.*;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 /**
  * DB 테이블 메타데이터를 JDBC로 추출한다.
@@ -25,6 +26,10 @@ public class ColumnInspector implements Closeable {
     private static final String TABLE_NAME   = "TABLE_NAME";
     private static final List<String> AVAILABLE_KEYS = Arrays.asList(COLUMN_NAME, TABLE_NAME);
 
+    // 테이블/스키마명은 JDBC 식별자 위치라 PreparedStatement 바인딩이 불가능하므로,
+    // COLUMN_QUERY에 원문 조합하기 전 화이트리스트로 검증한다.
+    private static final Pattern SAFE_IDENTIFIER = Pattern.compile("^[A-Za-z0-9_$#]+$");
+
     private final Connection connection;
     private final String dbSchema;
     private final Map<String, List<ColumnInfo>> columnCache = new HashMap<>();
@@ -35,6 +40,7 @@ public class ColumnInspector implements Closeable {
      */
     public ColumnInspector(GeneratorConfig config, ClassLoader jdbcLoader) throws Exception {
         this.dbSchema = (config.dbSchema != null && !config.dbSchema.isBlank()) ? config.dbSchema : null;
+        if (this.dbSchema != null) validateIdentifier(this.dbSchema);
 
         Class<?> driverClass = jdbcLoader.loadClass(config.dbDriver);
         Driver driver = (Driver) driverClass.getDeclaredConstructor().newInstance();
@@ -97,6 +103,7 @@ public class ColumnInspector implements Closeable {
         if (columnCache.containsKey(normalizedName)) {
             return columnCache.get(normalizedName);
         }
+        validateIdentifier(normalizedName);
 
         String qualifiedName = dbSchema != null ? dbSchema + "." + normalizedName : normalizedName;
         Statement statement = connection.createStatement();
@@ -166,6 +173,17 @@ public class ColumnInspector implements Closeable {
         String schema = connection.getSchema();
         if (schema != null && !schema.isEmpty()) return schema;
         return connection.getMetaData().getUserName();
+    }
+
+    /**
+     * 식별자(테이블/스키마명)가 영숫자·언더스코어·$·# 만으로 구성됐는지 검증한다.
+     * JDBC는 식별자 위치를 바인드 파라미터로 받지 않으므로, COLUMN_QUERY에 원문 조합하기 전
+     * 최소한의 화이트리스트로 SQL 조합 공격을 차단한다.
+     */
+    static void validateIdentifier(String name) {
+        if (name == null || !SAFE_IDENTIFIER.matcher(name).matches()) {
+            throw new IllegalArgumentException("Invalid SQL identifier: " + name);
+        }
     }
 
     /** DB 식별자 저장 방식에 맞게 대·소문자 정규화 (Oracle=대문자, PostgreSQL=소문자) */
@@ -283,7 +301,7 @@ public class ColumnInspector implements Closeable {
         return comments;
     }
 
-    private static String normalizeClassName(String rawClassName, int jdbcType, int scale) {
+    static String normalizeClassName(String rawClassName, int jdbcType, int scale) {
         return switch (jdbcType) {
             case Types.NUMERIC, Types.DECIMAL -> scale == 0 ? "java.lang.Long" : "java.lang.Double";
             case Types.TIMESTAMP, Types.TIMESTAMP_WITH_TIMEZONE -> "java.time.LocalDateTime";

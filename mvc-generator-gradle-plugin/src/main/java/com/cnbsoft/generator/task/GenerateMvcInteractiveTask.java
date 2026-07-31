@@ -16,9 +16,6 @@ import org.gradle.api.tasks.InputFiles;
 import org.gradle.api.tasks.Internal;
 import org.gradle.api.tasks.TaskAction;
 
-import java.io.File;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.*;
 
 /**
@@ -38,7 +35,7 @@ public abstract class GenerateMvcInteractiveTask extends DefaultTask {
     @TaskAction
     public void execute() {
         MvcGeneratorExtension ext = getGeneratorExtension().get();
-        ClassLoader jdbcLoader    = buildJdbcClassLoader();
+        ClassLoader jdbcLoader    = MvcGeneratorBaseTask.buildJdbcClassLoader(getJdbcClasspath());
         TableSelector selector    = new TableSelector(System.in, System.out);
 
         // DB 연결용 probe config (tableNames 검증 생략)
@@ -121,8 +118,6 @@ public abstract class GenerateMvcInteractiveTask extends DefaultTask {
             else
                 new PersistenceCodeGenerator(config, inspector, engine).generate(tableName);
         }
-        // if (all || types.contains(GenerationType.QUERY))
-            // new QueryCodeGenerator(config, inspector, engine).generate(tableName);
         if (all || types.contains(GenerationType.FORM_VIEW))
             new ViewCodeGenerator(config, inspector, engine).generate(tableName, ViewCodeGenerator.ViewType.FORM);
         if (all || types.contains(GenerationType.LIST_VIEW))
@@ -131,72 +126,13 @@ public abstract class GenerateMvcInteractiveTask extends DefaultTask {
 
     /** tableNames 검증을 건너뛴 DB 연결 전용 config */
     private GeneratorConfig buildProbeConfig(MvcGeneratorExtension ext) {
-        return buildConfigBuilder(ext)
-                .buildSkipTableCheck();
+        return ext.toConfigBuilder().buildSkipTableCheck();
     }
 
     /** 확정된 테이블 목록을 포함한 최종 config */
     private GeneratorConfig buildFinalConfig(MvcGeneratorExtension ext, List<String> tableNames) {
-        return buildConfigBuilder(ext)
+        return ext.toConfigBuilder()
                 .tableNames(tableNames)
                 .build();
-    }
-
-    private GeneratorConfig.Builder buildConfigBuilder(MvcGeneratorExtension ext) {
-        File customTplDir = ext.getCustomTemplateDir().isPresent()
-                ? ext.getCustomTemplateDir().get().getAsFile() : null;
-        File outputDir  = ext.getOutputDir().get().getAsFile();
-        File resourceDir = ext.getResourceOutputDir().isPresent()
-                ? ext.getResourceOutputDir().get().getAsFile() : outputDir;
-        File viewDir    = ext.getViewOutputDir().isPresent()
-                ? ext.getViewOutputDir().get().getAsFile() : outputDir;
-
-        return GeneratorConfig.builder()
-                .dbDriver(ext.getDbDriver().get())
-                .dbUrl(ext.getDbUrl().get())
-                .dbUsername(ext.getDbUsername().get())
-                .dbPassword(ext.getDbPassword().getOrElse(""))
-                .dbSchema(ext.getDbSchema().getOrElse(""))
-                .outputDir(outputDir)
-                .resourceOutputDir(resourceDir)
-                .viewOutputDir(viewDir)
-                .basePackage(ext.getBasePackage().get())
-                .modelPath(ext.getModelSubPackage().get())
-                .controllerPath(ext.getControllerSubPackage().get())
-                .servicePath(ext.getServiceSubPackage().get())
-                .persistencePath(ext.getPersistenceSubPackage().get())
-                .implPath(ext.getImplSubPackage().get())
-                .webAppPath(ext.getWebAppPath().get())
-                .viewPath(ext.getViewPath().get())
-                .viewExtension(ext.getViewExtension().get())
-                .queryPath(ext.getQueryPath().get())
-                .queryPrefix(ext.getQueryPrefix().get())
-                .queryExt(ext.getQueryExt().get())
-                .templateSet(ext.getTemplateSet().get())
-                .customTemplateDir(customTplDir)
-                .overwriteExisting(ext.getOverwriteExisting().get())
-                .useDddPattern(ext.getUseDddPattern().get())
-                .useModelBuilder(ext.getUseModelBuilder().get())
-                .useModelUpperCase(ext.getUseModelUpperCase().get())
-                .mapperType(ext.getMapperType().get())
-                .controllerType(ext.getControllerType().get())
-                .modelSuffix(ext.getModelSuffix().get())
-                .controllerSuffix(ext.getControllerSuffix().get())
-                .serviceSuffix(ext.getServiceSuffix().get())
-                .serviceImplSuffix(ext.getServiceImplSuffix().get())
-                .mapperSuffix(ext.getMapperSuffix().get());
-    }
-
-    private ClassLoader buildJdbcClassLoader() {
-        List<URL> urls = new ArrayList<>();
-        for (File f : getJdbcClasspath().getFiles()) {
-            try {
-                urls.add(f.toURI().toURL());
-            } catch (Exception e) {
-                throw new GradleException("Invalid JDBC classpath entry: " + f, e);
-            }
-        }
-        return new URLClassLoader(urls.toArray(new URL[0]),
-                MvcGeneratorBaseTask.class.getClassLoader());
     }
 }

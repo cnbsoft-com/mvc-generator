@@ -35,9 +35,11 @@ public abstract class MvcGeneratorBaseTask extends DefaultTask {
     @TaskAction
     public final void execute() {
         MvcGeneratorExtension ext = getGeneratorExtension().get();
-        GeneratorConfig config = buildConfig(ext);
+        GeneratorConfig config = ext.toConfigBuilder()
+                .tableNames(ext.getTableNames().get())
+                .build();
 
-        ClassLoader jdbcLoader = buildJdbcClassLoader();
+        ClassLoader jdbcLoader = buildJdbcClassLoader(getJdbcClasspath());
 
         try (ColumnInspector inspector = new ColumnInspector(config, jdbcLoader)) {
             TemplateEngine engine = new TemplateEngine(config);
@@ -54,64 +56,12 @@ public abstract class MvcGeneratorBaseTask extends DefaultTask {
                                              ColumnInspector inspector,
                                              TemplateEngine engine) throws Exception;
 
-    // ── 설정 빌드 ────────────────────────────────────────────────────
-
-    private GeneratorConfig buildConfig(MvcGeneratorExtension ext) {
-        File customTplDir = ext.getCustomTemplateDir().isPresent()
-                ? ext.getCustomTemplateDir().get().getAsFile()
-                : null;
-
-        File outputDir = ext.getOutputDir().get().getAsFile();
-        File resourceDir = ext.getResourceOutputDir().isPresent()
-                ? ext.getResourceOutputDir().get().getAsFile()
-                : outputDir;
-        File viewDir = ext.getViewOutputDir().isPresent()
-                ? ext.getViewOutputDir().get().getAsFile()
-                : outputDir;
-
-        return GeneratorConfig.builder()
-                .dbDriver(ext.getDbDriver().get())
-                .dbUrl(ext.getDbUrl().get())
-                .dbUsername(ext.getDbUsername().get())
-                .dbPassword(ext.getDbPassword().getOrElse(""))
-                .dbSchema(ext.getDbSchema().getOrElse(""))
-                .tableNames(ext.getTableNames().get())
-                .outputDir(outputDir)
-                .resourceOutputDir(resourceDir)
-                .viewOutputDir(viewDir)
-                .basePackage(ext.getBasePackage().get())
-                .modelPath(ext.getModelSubPackage().get())
-                .controllerPath(ext.getControllerSubPackage().get())
-                .servicePath(ext.getServiceSubPackage().get())
-                .persistencePath(ext.getPersistenceSubPackage().get())
-                .implPath(ext.getImplSubPackage().get())
-                .webAppPath(ext.getWebAppPath().get())
-                .viewPath(ext.getViewPath().get())
-                .viewExtension(ext.getViewExtension().get())
-                .queryPath(ext.getQueryPath().get())
-                .queryPrefix(ext.getQueryPrefix().get())
-                .queryExt(ext.getQueryExt().get())
-                .templateSet(ext.getTemplateSet().get())
-                .customTemplateDir(customTplDir)
-                .overwriteExisting(ext.getOverwriteExisting().get())
-                .useDddPattern(ext.getUseDddPattern().get())
-                .useModelBuilder(ext.getUseModelBuilder().get())
-                .useModelUpperCase(ext.getUseModelUpperCase().get())
-                .mapperType(ext.getMapperType().get())
-                .controllerType(ext.getControllerType().get())
-                .modelSuffix(ext.getModelSuffix().get())
-                .controllerSuffix(ext.getControllerSuffix().get())
-                .serviceSuffix(ext.getServiceSuffix().get())
-                .serviceImplSuffix(ext.getServiceImplSuffix().get())
-                .mapperSuffix(ext.getMapperSuffix().get())
-                .build();
-    }
-
     // ── JDBC 드라이버 격리 ClassLoader ───────────────────────────────
 
-    private ClassLoader buildJdbcClassLoader() {
+    /** JDBC 드라이버 전용 격리 ClassLoader 생성. Task 종류와 무관하게 공유되는 로직. */
+    public static ClassLoader buildJdbcClassLoader(ConfigurableFileCollection jdbcClasspath) {
         List<URL> urls = new ArrayList<>();
-        for (File f : getJdbcClasspath().getFiles()) {
+        for (File f : jdbcClasspath.getFiles()) {
             try {
                 urls.add(f.toURI().toURL());
             } catch (Exception e) {
