@@ -14,13 +14,13 @@
 
 	<select id="get" parameterType="<@toClass source=tableName />" resultMap="<@toClass source=tableName />ResultMap">
 		SELECT <include refid="${packagePath}.${persistencePath}.${modelName}.<@toClass source=tableName />${mapperSuffix}.baseColumnList" />
-		FROM ${tableName?upper_case}
+		FROM <@tableCase source=tableName />
 		<#list columns as column><#if column.primaryKey == true><#if column_index == 0>WHERE <#else>AND </#if> ${column.columnName?upper_case} = ${"#{"}<@toField source=column.columnName />}</#if></#list>
 	</select>
 
 	<select id="getList" parameterType="<@toClass source=tableName />" resultMap="<@toClass source=tableName />ResultMap">
 		SELECT <include refid="${packagePath}.${persistencePath}.${modelName}.<@toClass source=tableName />${mapperSuffix}.baseColumnList" />
-		FROM ${tableName?upper_case}
+		FROM <@tableCase source=tableName />
 		<where>
 			<#list columns as column>
 			<if test="<@toField source=column.columnName /> != null and !<@toField source=column.columnName /> eq ''.toString()">
@@ -31,7 +31,7 @@
 	</select>
 
 	<insert id="create" parameterType="<@toClass source=tableName />">
-		INSERT INTO ${tableName?upper_case}
+		INSERT INTO <@tableCase source=tableName />
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<#list columns as column>
 			<if test="<@toField source=column.columnName /> != null">
@@ -49,7 +49,7 @@
 	</insert>
 
 	<update id="update" parameterType="<@toClass source=tableName />">
-		UPDATE ${tableName?upper_case}
+		UPDATE <@tableCase source=tableName />
 		<set>
 			<#list columns as column>
 			<if test="<@toField source=column.columnName /> != null">
@@ -61,7 +61,7 @@
 	</update>
 
 	<delete id="delete" parameterType="<@toClass source=tableName />">
-		DELETE FROM ${tableName?upper_case}
+		DELETE FROM <@tableCase source=tableName />
 		<#list columns as column><#if column.primaryKey == true><#if column_index == 0>WHERE <#else>AND </#if> ${column.columnName?upper_case} = ${"#{"}<@toField source=column.columnName />}</#if></#list>
 	</delete>
 

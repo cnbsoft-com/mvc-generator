@@ -45,6 +45,7 @@ public class ModelCodeGenerator {
         model.put("serviceImplSuffix", config.serviceImplSuffix);
         model.put("mapperSuffix", config.mapperSuffix);
         model.put("useDddPattern", config.useDddPattern);
+        model.put("useModelBuilder", config.useModelBuilder);
 
         File outFile = PathResolver.modelFile(config, tableName);
         engine.generateFile(outFile, config.tplModel, model);

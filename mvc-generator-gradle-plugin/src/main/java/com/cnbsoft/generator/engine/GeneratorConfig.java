@@ -50,6 +50,8 @@ public class GeneratorConfig {
     // ── 동작 옵션 ────────────────────────────────────────────────────
     public final boolean overwriteExisting;
     public final boolean useDddPattern;
+    public final boolean useModelBuilder;
+    public final boolean useModelUpperCase;
 
     // ── Mapper 유형 ("xml" | "annotation") ──────────────────────────
     public final String mapperType;
@@ -113,6 +115,8 @@ public class GeneratorConfig {
         this.customTemplateDir  = b.customTemplateDir;
         this.overwriteExisting  = b.overwriteExisting;
         this.useDddPattern      = b.useDddPattern;
+        this.useModelBuilder    = b.useModelBuilder;
+        this.useModelUpperCase  = b.useModelUpperCase;
         this.mapperType         = b.mapperType;
         this.controllerType     = b.controllerType;
         this.modelSuffix        = b.modelSuffix;
@@ -150,6 +154,8 @@ public class GeneratorConfig {
         private File customTemplateDir  = null;
         private boolean overwriteExisting  = false;
         private boolean useDddPattern      = false;
+        private boolean useModelBuilder    = true;
+        private boolean useModelUpperCase  = true;
         private String mapperType          = "xml";
         private String controllerType      = "web";
         private String modelSuffix         = "";
@@ -183,6 +189,8 @@ public class GeneratorConfig {
         public Builder customTemplateDir(File v)   { this.customTemplateDir = v; return this; }
         public Builder overwriteExisting(boolean v){ this.overwriteExisting = v; return this; }
         public Builder useDddPattern(boolean v)    { this.useDddPattern = v; return this; }
+        public Builder useModelBuilder(boolean v)    { this.useModelBuilder = v; return this; }
+        public Builder useModelUpperCase(boolean v)  { this.useModelUpperCase = v; return this; }
         public Builder mapperType(String v)          { this.mapperType = v; return this; }
         public Builder controllerType(String v)      { this.controllerType = v; return this; }
         public Builder modelSuffix(String v)         { this.modelSuffix = v; return this; }

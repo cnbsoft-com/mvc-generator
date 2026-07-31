@@ -10,6 +10,7 @@ public class <@toClass source=tableName />${modelSuffix} {
     private <@fieldType source=column.columnClassName /> <@toField source=column.columnName />;
 	</#list>
 
+<#if useModelBuilder>
     private <@toClass source=tableName />${modelSuffix}() {}
 
     private <@toClass source=tableName />${modelSuffix}(Builder builder) {
@@ -21,6 +22,9 @@ public class <@toClass source=tableName />${modelSuffix} {
     public static Builder builder() {
         return new Builder();
     }
+<#else>
+    public <@toClass source=tableName />${modelSuffix}() {}
+</#if>
 
 	<#list columns as column>
     public <@fieldType source=column.columnClassName /> get<@toMethod source=column.columnName />() {
@@ -31,6 +35,7 @@ public class <@toClass source=tableName />${modelSuffix} {
     }
 	</#list>
 
+<#if useModelBuilder>
     public static class Builder {
 	<#list columns as column>
         private <@fieldType source=column.columnClassName /> <@toField source=column.columnName />;
@@ -47,4 +52,5 @@ public class <@toClass source=tableName />${modelSuffix} {
             return new <@toClass source=tableName />${modelSuffix}(this);
         }
     }
+</#if>
 }

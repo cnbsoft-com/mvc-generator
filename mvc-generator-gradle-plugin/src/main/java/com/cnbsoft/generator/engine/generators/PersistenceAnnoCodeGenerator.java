@@ -50,6 +50,7 @@ public class PersistenceAnnoCodeGenerator {
         model.put("serviceImplSuffix", config.serviceImplSuffix);
         model.put("mapperSuffix",   config.mapperSuffix);
         model.put("useDddPattern", config.useDddPattern);
+        model.put("useModelUpperCase", config.useModelUpperCase);
 
         File outFile = PathResolver.persistenceFile(config, tableName);
         engine.generateFile(outFile, config.tplPersistenceAnno, model);

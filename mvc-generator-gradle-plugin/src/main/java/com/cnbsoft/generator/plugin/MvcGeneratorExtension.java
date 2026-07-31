@@ -71,6 +71,8 @@ public class MvcGeneratorExtension {
     // ── 동작 옵션 ────────────────────────────────────────────────────
     private final Property<Boolean> overwriteExisting;
     private final Property<Boolean> useDddPattern;
+    private final Property<Boolean> useModelBuilder;
+    private final Property<Boolean> useModelUpperCase;
 
     // ── Mapper 유형 ──────────────────────────────────────────────────
     // "xml"        : XML 기반 MyBatis Mapper (기본값)
@@ -116,6 +118,8 @@ public class MvcGeneratorExtension {
         customTemplateDir   = objects.directoryProperty();
         overwriteExisting   = objects.property(Boolean.class).convention(false);
         useDddPattern       = objects.property(Boolean.class).convention(false);
+        useModelBuilder     = objects.property(Boolean.class).convention(true);
+        useModelUpperCase   = objects.property(Boolean.class).convention(true);
         mapperType          = objects.property(String.class).convention("xml");
         controllerType      = objects.property(String.class).convention("web");
         modelSuffix         = objects.property(String.class).convention("");
@@ -150,6 +154,8 @@ public class MvcGeneratorExtension {
     public DirectoryProperty getCustomTemplateDir()    { return customTemplateDir; }
     public Property<Boolean> getOverwriteExisting()    { return overwriteExisting; }
     public Property<Boolean> getUseDddPattern()        { return useDddPattern; }
+    public Property<Boolean> getUseModelBuilder()      { return useModelBuilder; }
+    public Property<Boolean> getUseModelUpperCase()    { return useModelUpperCase; }
     public Property<String>  getMapperType()             { return mapperType; }
     public Property<String>  getControllerType()         { return controllerType; }
     public Property<String>  getModelSuffix()            { return modelSuffix; }

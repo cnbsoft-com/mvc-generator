@@ -8,6 +8,9 @@
 
 <#macro toAllLow source>${source?replace('_', '')?lower_case}</#macro>
 
+<#-- Mapper SQL의 테이블명 케이스 (useModelUpperCase 옵션에 따라 대/소문자 결정, 컬럼명에는 영향 없음) -->
+<#macro tableCase source><#if useModelUpperCase>${source?upper_case}<#else>${source?lower_case}</#if></#macro>
+
 <#macro fieldType source>${source?replace('java.lang.', '')}</#macro>
 
 <#macro getClassName source><#list source?split('.') as name><#if name?has_next == false>${name}</#if></#list></#macro>

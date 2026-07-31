@@ -146,8 +146,14 @@ mvcGenerator {
     serviceImplSuffix = 'SvcImpl'     // 기본값: "ServiceImpl"→ UserSvcImpl.java
     mapperSuffix      = '00Mapper'    // 기본값: "Mapper"     → User00Mapper.java
 
-    // [선택] VO에 빌더 패턴 적용 여부 (기본값: false)
-    useBuilderPattern = true 
+    // [선택] Model(VO)에 빌더 패턴 적용 여부 (기본값: true)
+    // true: private 생성자 + static Builder 클래스
+    // false: public 기본 생성자 + getter/setter
+    useModelBuilder = true
+
+    // [선택] Mapper SQL의 FROM/INSERT INTO 테이블명 대소문자 (기본값: true, 컬럼명에는 영향 없음)
+    // true: FROM USER_ACCOUNT | false: from user_account
+    useModelUpperCase = true
 
     // [선택] 뷰 및 쿼리 파일 설정
     viewPath      = 'WEB-INF/views'

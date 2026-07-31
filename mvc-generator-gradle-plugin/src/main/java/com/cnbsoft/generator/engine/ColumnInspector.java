@@ -189,7 +189,7 @@ public class ColumnInspector implements Closeable {
 
     // ────────────────────────────────────────────────────────────────
     // JDBC 타입 코드 기준으로 DBMS 종속 클래스명을 표준 Java 타입으로 정규화
-    // (예: oracle.sql.TIMESTAMP → java.sql.Timestamp)
+    // (예: oracle.sql.TIMESTAMP → java.time.LocalDateTime)
     // ────────────────────────────────────────────────────────────────
     private Map<String, String> getColumnComments(String tableName) {
         Map<String, String> comments = new HashMap<>();
@@ -286,7 +286,7 @@ public class ColumnInspector implements Closeable {
     private static String normalizeClassName(String rawClassName, int jdbcType, int scale) {
         return switch (jdbcType) {
             case Types.NUMERIC, Types.DECIMAL -> scale == 0 ? "java.lang.Long" : "java.lang.Double";
-            case Types.TIMESTAMP, Types.TIMESTAMP_WITH_TIMEZONE -> "java.sql.Timestamp";
+            case Types.TIMESTAMP, Types.TIMESTAMP_WITH_TIMEZONE -> "java.time.LocalDateTime";
             case Types.DATE -> "java.sql.Date";
             case Types.TIME, Types.TIME_WITH_TIMEZONE -> "java.sql.Time";
             default -> rawClassName;

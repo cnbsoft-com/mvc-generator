@@ -8,6 +8,11 @@ import java.util.List;
 
 import ${packagePath}.${modelPath}.<@toClass source=tableName />${modelSuffix};
 
+<#assign persistencePackage><@domainPackage subPath=persistencePath tableName=tableName useDdd=useDddPattern /></#assign>
+<#assign mapperClassName><@toClass source=tableName />${mapperSuffix}</#assign>
+<#assign mapperFqcn = packagePath + "." + persistencePackage + "." + mapperClassName>
+<#assign findByMethodName>findBy<#list columns as column><#if column.primaryKey == true><@toMethod source=column.columnName /></#if></#list></#assign>
+
 /**
  * <@toClass source=tableName />${mapperSuffix} - Annotation-based MyBatis Mapper
  */
@@ -16,34 +21,44 @@ import ${packagePath}.${modelPath}.<@toClass source=tableName />${modelSuffix};
 public interface <@toClass source=tableName />${mapperSuffix} {
 
     @Select("""
-            SELECT <#list columns as col>${col.columnName?upper_case}<#if col_has_next>, </#if></#list>
-            FROM ${tableName?upper_case}
-            WHERE <#assign pkFirst = true><#list columns as column><#if column.primaryKey == true><#if !pkFirst> AND </#if>${column.columnName?upper_case} = ${"#{"}<@toField source=column.columnName />}<#assign pkFirst = false></#if></#list>
+            select /* ${mapperFqcn}.get */
+            <#list columns as col>    <#if col_index == 0>  <#else>, </#if><#if (col.comment!"")?has_content>${col.columnName?lower_case?right_pad(20)}/* ${col.comment} */<#else>${col.columnName?lower_case}</#if>
+            </#list>     from ${tableName?lower_case}
+             where <#assign pkFirst = true><#list columns as column><#if column.primaryKey == true><#if !pkFirst> and </#if>${column.columnName?lower_case} = ${"#{"}<@toField source=column.columnName />}<#assign pkFirst = false></#if></#list>
             """)
     <@toClass source=tableName />${modelSuffix} get(<@toClass source=tableName />${modelSuffix} <@toField source=tableName />);
 
     @Select("""
-            SELECT <#list columns as col>${col.columnName?upper_case}<#if col_has_next>, </#if></#list>
-            FROM ${tableName?upper_case}
+            select /* ${mapperFqcn}.${findByMethodName} */
+            <#list columns as col>    <#if col_index == 0>  <#else>, </#if><#if (col.comment!"")?has_content>${col.columnName?lower_case?right_pad(20)}/* ${col.comment} */<#else>${col.columnName?lower_case}</#if>
+            </#list>     from ${tableName?lower_case}
+             where <#assign pkFirst = true><#list columns as column><#if column.primaryKey == true><#if !pkFirst> and </#if>${column.columnName?lower_case} = ${"#{"}<@toField source=column.columnName />}<#assign pkFirst = false></#if></#list>
+            """)
+    <@toClass source=tableName />${modelSuffix} ${findByMethodName}(<#assign pkFirst = true><#list columns as column><#if column.primaryKey == true><#if !pkFirst>, </#if>@Param("<@toField source=column.columnName />") <@fieldType source=column.columnClassName /> <@toField source=column.columnName /><#assign pkFirst = false></#if></#list>);
+
+    @Select("""
+            select /* ${mapperFqcn}.getList */
+            <#list columns as col>    <#if col_index == 0>  <#else>, </#if><#if (col.comment!"")?has_content>${col.columnName?lower_case?right_pad(20)}/* ${col.comment} */<#else>${col.columnName?lower_case}</#if>
+            </#list>     from ${tableName?lower_case}
             """)
     List${"<"}<@toClass source=tableName />${modelSuffix}${">"} getList(<@toClass source=tableName />${modelSuffix} <@toField source=tableName />);
 
     @Insert("""
-            INSERT INTO ${tableName?upper_case}
+            INSERT INTO <@tableCase source=tableName />
             (<#list columns as col>${col.columnName?upper_case}<#if col_has_next>, </#if></#list>)
             VALUES (<#list columns as col>${"#{"}<@toField source=col.columnName />}<#if col_has_next>, </#if></#list>)
             """)
     int create(<@toClass source=tableName />${modelSuffix} <@toField source=tableName />);
 
     @Update("""
-            UPDATE ${tableName?upper_case}
+            UPDATE <@tableCase source=tableName />
             SET <#assign setFirst = true><#list columns as column><#if column.primaryKey == false><#if !setFirst>, </#if>${column.columnName?upper_case} = ${"#{"}<@toField source=column.columnName />}<#assign setFirst = false></#if></#list>
             WHERE <#assign pkFirst = true><#list columns as column><#if column.primaryKey == true><#if !pkFirst> AND </#if>${column.columnName?upper_case} = ${"#{"}<@toField source=column.columnName />}<#assign pkFirst = false></#if></#list>
             """)
     int update(<@toClass source=tableName />${modelSuffix} <@toField source=tableName />);
 
     @Delete("""
-            DELETE FROM ${tableName?upper_case}
+            DELETE FROM <@tableCase source=tableName />
             WHERE <#assign pkFirst = true><#list columns as column><#if column.primaryKey == true><#if !pkFirst> AND </#if>${column.columnName?upper_case} = ${"#{"}<@toField source=column.columnName />}<#assign pkFirst = false></#if></#list>
             """)
     int delete(<@toClass source=tableName />${modelSuffix} <@toField source=tableName />);
